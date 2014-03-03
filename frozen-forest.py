@@ -1,11 +1,10 @@
 from flask import Flask
 
-app = Flask(__name__)
+import routes
 
-@app.route('/', methods=['GET'])
-def index():
-    return 'hello world'
+app = Flask(__name__)
+routes.register_views(app)
 
 # For local debugging. Use foreman in production.
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
