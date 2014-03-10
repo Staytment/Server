@@ -1,0 +1,22 @@
+{
+  "name": "frozen-forest",
+  "version": "0.0.0",
+  "description": "API for Staytment",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:soeren/frozen-forest.git"
+  },
+  "author": "Trottl",
+  "license": "-",
+  "dependencies": {
+    "logfmt": "~0.21.0",
+    "express": "~3.5.0"
+  }
+  "engines": {
+    "node": "0.10.x"
+  }
+}
