@@ -2,7 +2,7 @@
   "name": "frozen-forest",
   "version": "0.0.0",
   "description": "API for Staytment",
-  "main": "web.js",
+  "main": "frozen-forest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,7 +14,8 @@
   "license": "-",
   "dependencies": {
     "logfmt": "~0.21.0",
-    "express": "~3.5.0"
+    "express": "~3.5.0",
+    "mongodb": "~1.3.23"
   },
   "engines": {
     "node": "0.10.x"
