@@ -15,7 +15,9 @@
   "dependencies": {
     "logfmt": "~0.21.0",
     "express": "~3.5.0",
-    "mongodb": "~1.3.23"
+    "mongodb": "~1.3.23",
+    "monk": "~0.8.1",
+    "git-rev": "~0.2.1"
   },
   "engines": {
     "node": "0.10.x"
