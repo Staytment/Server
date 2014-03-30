@@ -10,6 +10,7 @@
 //};
 
 var db = require('../database.js');
+var posts = db.get('posts');
 
 exports.list = function (req, res) {
   var collection = db.get('posts');
@@ -19,7 +20,6 @@ exports.list = function (req, res) {
 };
 
 exports.create = function (req, res) {
-  var collection = db.get('posts');
   var post = {
     "lat": req.body.lat,
     "long": 0,
@@ -28,6 +28,6 @@ exports.create = function (req, res) {
     "relevance": 0,
     "user": 0
   };
-  collection.insert(post);
+  posts.insert(post);
   res.json(post);
 };
