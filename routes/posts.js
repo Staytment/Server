@@ -35,7 +35,7 @@ exports.create = function (req, res) {
   var post = {
     "lat": req.param('lat'),
     "long": req.param('long'),
-    "message": 'empty',
+    "message": req.param('message'),
     "tags": [],
     "relevance": 100,
     "user": 0
