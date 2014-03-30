@@ -19,15 +19,15 @@ exports.list = function (req, res) {
 };
 
 exports.create = function (req, res) {
-  var post = {
-    "lat": 5.552,
-    "long": 2.342,
-    "message": "Bong!",
-    "tags": ["Lifestyle", "Restaurant", "YOLO"],
-    "relevance": 1337,
-    "user": 42
-  };
   var collection = db.get('posts');
+  var post = {
+    "lat": req.body.lat,
+    "long": 0,
+    "message": 'empty',
+    "tags": [],
+    "relevance": 0,
+    "user": 0
+  };
   collection.insert(post);
-  res.send(post);
+  res.json(post);
 };

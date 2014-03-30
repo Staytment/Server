@@ -5,7 +5,7 @@ module.exports = function (req, res) {
   git.long(function (commit) {
     git.branch(function (branch) {
       git.tag(function (tag) {
-        res.send({
+        res.json({
           'commit': commit,
           'branch': branch,
           'tag': tag
