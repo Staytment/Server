@@ -1,11 +1,15 @@
 var express = require('express');
 var logfmt = require('logfmt');
+var validator = require('./validator');
 
 var posts = require('./routes/posts');
 
 var app = express();
 app.use(logfmt.requestLogger());
+app.use(express.compress());
 app.use(express.json());
+app.use(express.urlencoded());
+app.use(validator());
 
 app.all('/', require('./routes/index'));
 app.get('/posts', posts.list);

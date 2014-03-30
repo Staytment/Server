@@ -20,12 +20,24 @@ exports.list = function (req, res) {
 };
 
 exports.create = function (req, res) {
+  req.assert('lat', 'not a valid latitude value').isLat();
+  req.assert('long', 'not a valid longitude value').isLong();
+  req.assert('message', 'required').notEmpty();
+  req.sanitize('lat').toFloat();
+  req.sanitize('long').toFloat();
+  req.sanitize('message').toString();
+
+  var errors = req.validationErrors();
+  if (errors) {
+    res.send({'error': errors});
+    return;
+  }
   var post = {
-    "lat": req.body.lat,
-    "long": 0,
+    "lat": req.param('lat'),
+    "long": req.param('long'),
     "message": 'empty',
     "tags": [],
-    "relevance": 0,
+    "relevance": 100,
     "user": 0
   };
   posts.insert(post);
