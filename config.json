@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:5000",
+  "posts": {
+    "publicFields": {
+      "lat": 1,
+      "long": 1,
+      "message": 1,
+      "relevance": 1
+    }
+  }
+}
