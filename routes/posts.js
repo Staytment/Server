@@ -24,16 +24,19 @@ var swagger = require('swagger-node-express');
 //};
 
 exports.list = {
-  'spec': {
-    "description": 'Fetch a list of all posts (just for development purposes, will be removed or changed in future)',
-    "path": "/posts",
-    "notes": 'Returns all posts',
-    "summary": 'Fetch a list of all posts (dev only)',
-    "method": "GET",
-    "type": "Post",
-    "nickname": "getPostList"
+  spec: {
+    description: 'Fetch a list of all posts (just for development purposes, will be removed or changed in future)',
+    path: "/posts",
+    notes: 'Returns a list of all posts. This method is for development purposes and will be changed or removed in future.',
+    summary: 'Fetch a list of all posts (dev only)',
+    method: 'GET',
+    type : 'array',
+    items: {
+      $ref: 'Post'
+    },
+    nickname: 'getPostList'
   },
-  'action': function (req, res) {
+  action: function (req, res) {
     posts.find({}, {fields: config.posts.publicFields}, function (err, docs) {
       res.send(docs);
     });
