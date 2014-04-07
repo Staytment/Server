@@ -26,7 +26,7 @@ var swagger = require('swagger-node-express');
 exports.list = {
   spec: {
     description: 'Fetch a list of all posts (just for development purposes, will be removed or changed in future)',
-    path: "/posts",
+    path: '/posts',
     notes: 'Returns a list of all posts. This method is for development purposes and will be changed or removed in future.',
     summary: 'Fetch a list of all posts (dev only)',
     method: 'GET',
