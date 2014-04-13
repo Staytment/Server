@@ -49,7 +49,7 @@ swagger.addDelete(posts.deletePost);
 
 
 
-swagger.configure("http://localhost:5000", "0.1");
+swagger.configure("http://api.staytment.com", "0.1");
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function () {
   console.log('Listening on localhost:' + port);
