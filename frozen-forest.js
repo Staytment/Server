@@ -5,11 +5,17 @@ var swagger = require('swagger-node-express');
 var models = require('./models.json');
 
 var posts = require('./routes/posts');
+var cors = require('cors');
 
 var app = express();
+app.use(cors());
 app.use(logfmt.requestLogger());
 app.use(express.compress());
 app.use(express.json());
+app.use (function (error, req, res, next){
+  //Catch json error
+  res.send(res, {code: 400, message: 'Bad request'});
+});
 app.use(express.urlencoded());
 app.use(validator());
 
@@ -34,9 +40,11 @@ swagger.addValidator(
 swagger.addModels(models);
 
 app.all('/', require('./routes/index'));
-swagger.addGet(posts.list);
+swagger.addGet(posts.getPostList);
+swagger.addGet(posts.getPost);
+swagger.addPost(posts.createPost);
 //app.post('/posts', posts.create);
-app.get('/posts/:id', posts.load);
+//app.get('/posts/:id', posts.load);
 
 
 
