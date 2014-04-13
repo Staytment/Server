@@ -43,6 +43,7 @@ app.all('/', require('./routes/index'));
 swagger.addGet(posts.getPostList);
 swagger.addGet(posts.getPost);
 swagger.addPost(posts.createPost);
+swagger.addDelete(posts.deletePost);
 //app.post('/posts', posts.create);
 //app.get('/posts/:id', posts.load);
 

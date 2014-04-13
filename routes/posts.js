@@ -63,12 +63,11 @@ exports.getPost = {
       errors.invalid('postId', res);
       return;
     }
-    posts.findById(req.param('postId'), {fields: config.posts.publicFields}, function (err, doc) {
+    posts.findOne({_id: req.param('postId')}, {fields: config.posts.publicFields}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
         return
       }
-      doc.link = config.baseUrl + '/posts/' + doc._id;
       res.json(doc);
     });
   }
@@ -121,5 +120,34 @@ exports.createPost = {
     };
     posts.insert(post);
     res.json(post);
+  }
+};
+
+exports.deletePost = {
+  spec: {
+    description: 'Deletes a post',
+    path: '/posts/{postId}',
+    notes: 'Deletes the post with the passed postId. The postId must be a valid MongoDB ID, i.e. it needs to be a hex number. Will return 204 - No Content on success',
+    summary: 'Deletes a post',
+    method: 'DELETE',
+    type: 'void',
+    nickname: 'deletePost',
+    parameters: [swagger.pathParam('postId', 'ID of the post that should be deleted', 'hex')],
+    responseMessages: [errors.notFound('Post')]
+  },
+  action: function (req, res) {
+    req.assert('postId').isHexadecimal();
+    req.sanitize('postId').toString();
+    if (req.validationErrors()) {
+      errors.invalid('postId', res);
+      return;
+    }
+    posts.findAndModify({_id: req.param('postId')}, {}, {remove: true}, function (err, doc) {
+      if (!doc) {
+        errors.notFound('Post', res);
+        return;
+      }
+      res.send(204);
+    });
   }
 };
