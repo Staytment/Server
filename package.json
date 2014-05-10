@@ -25,7 +25,8 @@
     "body-parser": "~1.0.2",
     "passport": "~0.2.0",
     "passport-google": "~0.3.0",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "newrelic": "~1.5.4"
   },
   "engines": {
     "node": "0.10.x"
