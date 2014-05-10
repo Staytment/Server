@@ -7,7 +7,8 @@ module.exports = function (req, res) {
         res.json({
           'commit': commit,
           'branch': branch,
-          'tag': tag
+          'tag': tag,
+          'user': req.user
         });
       });
     });

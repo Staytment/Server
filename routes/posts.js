@@ -1,28 +1,8 @@
-//exports.list = function (req, res) {
-//  res.send({
-//      "lat": 5.552,
-//      "long": 2.342,
-//      "message": "Bong!",
-//      "tags": ["Lifestyle", "Restaurant", "YOLO"],
-//      "relevance": 1337,
-//      "user": 42
-//    });
-//};
-
 var db = require('../database.js');
 var posts = db.get('posts');
 var config = require('../config.json');
 var swagger = require('swagger-node-express');
 var errors = swagger.errors;
-
-//exports.list = function (req, res) {
-//  posts.find({}, {fields: config.posts.publicFields}, function (err, docs) {
-//    for (var i = 0; i < docs.length; i++) {
-//      docs[i].link = config.baseUrl + '/posts/' + docs[i]._id;
-//    }
-//    res.send(docs);
-//  });
-//};
 
 exports.getPostList = {
   spec: {
