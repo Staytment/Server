@@ -96,7 +96,7 @@ exports.createPost = {
       message: req.param('message'),
       tags: [],
       relevance: 100,
-      user: 0
+      user: req.user._id
     };
     posts.insert(post);
     res.json(post);
@@ -107,13 +107,13 @@ exports.deletePost = {
   spec: {
     description: 'Deletes a post',
     path: '/posts/{postId}',
-    notes: 'Deletes the post with the passed postId. The postId must be a valid MongoDB ID, i.e. it needs to be a hex number. Will return 204 - No Content on success',
+    notes: 'Deletes the post with the passed postId. The postId must be a valid MongoDB ID, i.e. it needs to be a hex number. Will return "204 - No Content" on success. You may only delete posts your own posts.',
     summary: 'Deletes a post',
     method: 'DELETE',
     type: 'void',
     nickname: 'deletePost',
     parameters: [swagger.pathParam('postId', 'ID of the post that should be deleted', 'hex')],
-    responseMessages: [errors.notFound('Post')]
+    responseMessages: [errors.notFound('Post'), errors.invalid('postId'), errors.forbidden()]
   },
   action: function (req, res) {
     req.assert('postId').isHexadecimal();
@@ -122,12 +122,18 @@ exports.deletePost = {
       errors.invalid('postId', res);
       return;
     }
-    posts.findAndModify({_id: req.param('postId')}, {}, {remove: true}, function (err, doc) {
+    posts.findOne({_id: req.param('postId')}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
-        return;
+        return
       }
-      res.send(204);
+      if (!doc.user.equals(req.user._id)) {
+        errors.forbidden(res);
+        return
+      }
+      posts.findAndModify({_id: req.param('postId'), user: req.user._id}, {}, {remove: true}, function (err, doc) {
+        res.send(err || 204);
+      });
     });
   }
 };
