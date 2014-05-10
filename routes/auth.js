@@ -6,8 +6,8 @@ var crypto = require('crypto');
 var users = db.get('users');
 
 passport.use(new GoogleStrategy({
-    returnURL: 'http://localhost:5000/auth/google/return',
-    realm: 'http://localhost:5000/'
+    returnURL: (process.env.DOMAIN_API || 'http://localhost:5000/') + 'auth/google/return',
+    realm: process.env.DOMAIN_API || 'http://localhost:5000/'
   },
   function (identifier, profile, done) {
     users.findOne({provider: 'google', identifier: identifier}, function (err, user) {
