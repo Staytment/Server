@@ -87,7 +87,7 @@ passport.use(new FacebookStrategy({
 module.exports = function (app) {
   app.use(passport.initialize());
 //  app.get('/auth/google', passport.authenticate('google', {scope: 'https://www.googleapis.com/auth/plus.login', session: false}));
-  app.get('/auth/google', passport.authenticate('google', {scope: 'https://www.googleapis.com/auth/userinfo.email', session: false}));
+  app.get('/auth/google', passport.authenticate('google', {scope: 'email', session: false}));
   app.get('/auth/google/callback', passport.authenticate('google', {session: false}), function (req, res) {
     res.json(req.user);
   });

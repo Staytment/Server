@@ -51,9 +51,6 @@ swagger.addGet(posts.getPostList);
 swagger.addGet(posts.getPost);
 swagger.addPost(posts.createPost);
 swagger.addDelete(posts.deletePost);
-//app.post('/posts', posts.create);
-//app.get('/posts/:id', posts.load);
-
 
 swagger.configure(process.env.DOMAIN_API || 'http://localhost:5000', '0.1');
 var port = Number(process.env.PORT || 5000);
