@@ -26,11 +26,10 @@ app.use(function (error, req, res, next) {
 app.use(bodyParser.urlencoded());
 app.use(validator());
 auth(app);
-app.all('/', require('./routes/index'));
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   // Check for api key and set req.user
-  var apiKey = req.param('api_key') || req.param('apiKey') ;
-  db.get('users').findOne({apiKey: apiKey}, function(err, user) {
+  var apiKey = req.param('api_key') || req.param('apiKey');
+  db.get('users').findOne({apiKey: apiKey}, function (err, user) {
     if (!user) {
       res.send(JSON.stringify({
         "message": "forbidden",
@@ -42,6 +41,7 @@ app.use(function(req, res, next) {
     }
   });
 });
+app.all('/', require('./routes/index'));
 
 swagger.setAppHandler(app);
 swagger.configureSwaggerPaths('', '/api-docs', '');
