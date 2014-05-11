@@ -12,9 +12,16 @@ before(function () {
     name: 'testuser',
     apiKey: 'thetestuserapikey'
   });
+  users.insert({
+    provider: 'localhost',
+    identifier: '1338',
+    email: 'someone@localhost',
+    name: 'someone else',
+    apiKey: 'theotheruserapikey'
+  });
 });
 
 after(function () {
-  posts.remove();
+//  posts.remove();
   users.remove({apiKey: 'thetestuserapikey'});
 });
