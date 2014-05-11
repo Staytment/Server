@@ -8,6 +8,7 @@
     <orderEntry type="library" name="Node.js v0.10.21 Core Modules" level="application" />
     <orderEntry type="library" name="express-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="express-validator-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="chai-DefinitelyTyped" level="application" />
   </component>
 </module>
 
