@@ -30,11 +30,11 @@ app.use(function (req, res, next) {
   // Check for api key and set req.user
   var apiKey = req.param('api_key') || req.param('apiKey');
   db.get('users').findOne({apiKey: apiKey}, function (err, user) {
-    if (!user) {
-      res.send(JSON.stringify({
-        "message": "forbidden",
-        "code": 403
-      }), 403);
+    if (!user || !apiKey) {
+      res.json({
+        message: 'forbidden',
+        code: 403
+      }, 403);
     } else {
       req.user = user;
       next();
