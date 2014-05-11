@@ -29,7 +29,7 @@ auth(app);
 app.all('/', require('./routes/index'));
 app.use(function(req, res, next) {
   // Check for api key and set req.user
-  var apiKey = req.param('api_key');
+  var apiKey = req.param('api_key') || req.param('apiKey') ;
   db.get('users').findOne({apiKey: apiKey}, function(err, user) {
     if (!user) {
       res.send(JSON.stringify({
