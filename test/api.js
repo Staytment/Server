@@ -168,8 +168,13 @@ describe('API', function () {
         expect(post.user).to.equal(otheruser._id.toString());
         expect(post.relevance).to.be.a('number');
         done(err);
-      })
+      });
     });
-//    it('should return 404 - Not Found when using HTTP GET /posts/:id with an invalid id')
+    it('should return 404 when using HTTP GET /posts/:id with an unkown id', function (done) {
+      request.get('/posts/deadbeef?apiKey=thetestuserapikey').expect(404, done);
+    });
+    it('should return 400 when using HTTP GET /posts/:id with an invalid id', function (done) {
+      request.get('/posts/valid_ids_may_only_be_hex_numbers?apiKey=thetestuserapikey').expect(400, done);
+    });
   });
 });
