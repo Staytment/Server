@@ -30,7 +30,8 @@
     "newrelic": "~1.5.4",
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
-    "supertest": "~0.12.1"
+    "supertest": "~0.12.1",
+    "passport-twitter": "~1.0.2"
   },
   "engines": {
     "node": "0.10.x"

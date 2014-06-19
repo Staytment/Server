@@ -2,6 +2,7 @@ var db = require('../database');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 var uuid = require('node-uuid');
 var crypto = require('crypto');
 var users = db.get('users');
@@ -83,6 +84,32 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+passport.use(new TwitterStrategy({
+    consumerKey: 'z37mM6PwnBKSvBLZEjMQMPSCg',
+    consumerSecret: 'wUok4JZoRMp5GVDSxi2ri7CPTeQcXCoFYlXX5935kwKRhEQRXN',
+    callbackURL: (process.env.DOMAIN_API || 'http://localhost:5000/') + 'auth/twitter/callback'
+  },
+  function(token, tokenSecret, profile, done) {
+    users.findOne({provider: 'twitter', identifier: profile.id}, function (err, user) {
+      if (!user) {
+        var apiKey = crypto.createHash('sha256')
+          .update(uuid())
+          .update(profile.id)
+          .digest('hex');
+        var user = {
+          provider: 'twitter',
+          identifier: profile.id,
+          email: profile._json.email,
+          name: profile.displayName,
+          apiKey: apiKey
+        };
+        users.insert(user);
+      }
+      done(err, user);
+    });
+  }
+));
+
 
 module.exports = function (app) {
   app.use(passport.initialize());
@@ -93,6 +120,10 @@ module.exports = function (app) {
   });
   app.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email user_likes', session: false}));
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {session: false}), function (req, res) {
+    res.json(req.user);
+  });
+  app.get('/auth/twitter', passport.authenticate('twitter', {scope: 'email', session: false}));
+  app.get('/auth/twitter/callback', passport.authenticate('twitter', {session: false}), function (req, res) {
     res.json(req.user);
   });
 };
