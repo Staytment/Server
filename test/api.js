@@ -17,8 +17,8 @@ describe('API', function () {
   });
 
   describe('Authentication', function () {
-    it('should not allow access without api key', function (done) {
-      request.get('/').expect(403, '{"message":"forbidden","code":403}', done);
+    it('should allow access without api key', function (done) {
+      request.get('/').expect(200, done);
     });
     it('should not allow access with an invalid api key', function (done) {
       request.get('/?api_key=notavalidapikey').expect(403, '{"message":"forbidden","code":403}', done);
@@ -112,6 +112,13 @@ describe('API', function () {
         message: 'Testmessage'
       }).expect(400, done);
     });
+    it('should not create a new post without an api key', function (done) {
+      request.post('/posts/').send({
+        lat: 13,
+        long: 37,
+        message: 'Testmessage'
+      }).expect(403, '{"message":"forbidden","code":403}', done);
+    });
   });
   describe('/posts/:id', function () {
     var my_post_id;
@@ -164,7 +171,19 @@ describe('API', function () {
         }
       });
     });
-    it('should return a post on HTTP GET /posts/:id', function (done) {
+    it('should forbid deleting posts on HTTP DELETE /posts/:id without api key', function (done) {
+      request.delete('/posts/' + other_post_id).expect(403, function (err, res) {
+        if (err) {
+          done(err);
+        } else {
+          posts.findOne({'_id': other_post_id}, function (err, doc) {
+            expect(doc).to.exist;
+            done(err);
+          });
+        }
+      });
+    });
+    it('should return a post on HTTP GET /posts/:id with api key', function (done) {
       request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
         var post = res.body;
         expect(post.lat).to.equal(47);
@@ -176,11 +195,29 @@ describe('API', function () {
         done(err);
       });
     });
-    it('should return 404 when using HTTP GET /posts/:id with an unkown id', function (done) {
+    it('should return a post on HTTP GET /posts/:id without api key', function (done) {
+      request.get('/posts/' + other_post_id).expect(200, function (err, res) {
+        var post = res.body;
+        expect(post.lat).to.equal(47);
+        expect(post.long).to.equal(11);
+        expect(post.message).to.equal('Testmessage');
+        expect(post._id).to.exist;
+        expect(post.user).to.equal(otheruser._id.toString());
+        expect(post.relevance).to.be.a('number');
+        done(err);
+      });
+    });
+    it('should return 404 when using HTTP GET /posts/:id with an unkown id with api key', function (done) {
       request.get('/posts/deadbeef?apiKey=thetestuserapikey').expect(404, done);
     });
-    it('should return 400 when using HTTP GET /posts/:id with an invalid id', function (done) {
+    it('should return 404 when using HTTP GET /posts/:id with an unkown id without api key', function (done) {
+      request.get('/posts/deadbeef').expect(404, done);
+    });
+    it('should return 400 when using HTTP GET /posts/:id with an invalid id with api key', function (done) {
       request.get('/posts/valid_ids_may_only_be_hex_numbers?apiKey=thetestuserapikey').expect(400, done);
+    });
+    it('should return 400 when using HTTP GET /posts/:id with an invalid id without api key', function (done) {
+      request.get('/posts/valid_ids_may_only_be_hex_numbers').expect(400, done);
     });
   });
 });
