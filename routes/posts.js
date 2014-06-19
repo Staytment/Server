@@ -58,7 +58,7 @@ exports.createPost = {
     description: 'Create a new post',
     path: '/posts/',
     notes: 'You need to give the message of the post and the coordinates. The user will be automatically assigned and a unique id will be generated and given to you in the response.',
-    summary: 'Create a new post',
+    summary: 'Create a new post. API key required.',
     method: 'POST',
     type: 'Post',
     nickname: 'createPost',
@@ -72,6 +72,10 @@ exports.createPost = {
     ]
   },
   action: function (req, res) {
+    if (req.user.readOnly) {
+      errors.forbidden(res);
+      return;
+    }
     req.assert('lat', 'not a valid latitude value').isLat();
     req.assert('long', 'not a valid longitude value').isLong();
     req.assert('message', 'required').notEmpty();
@@ -108,7 +112,7 @@ exports.deletePost = {
     description: 'Deletes a post',
     path: '/posts/{postId}',
     notes: 'Deletes the post with the passed postId. The postId must be a valid MongoDB ID, i.e. it needs to be a hex number. Will return "204 - No Content" on success. You may only delete posts your own posts.',
-    summary: 'Deletes a post',
+    summary: 'Deletes a post. API key required.',
     method: 'DELETE',
     type: 'void',
     nickname: 'deletePost',
@@ -116,6 +120,10 @@ exports.deletePost = {
     responseMessages: [errors.notFound('Post'), errors.invalid('postId'), errors.forbidden()]
   },
   action: function (req, res) {
+    if (req.user.readOnly) {
+      errors.forbidden(res);
+      return;
+    }
     req.assert('postId').isHexadecimal();
     req.sanitize('postId').toString();
     if (req.validationErrors()) {

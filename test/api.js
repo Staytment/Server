@@ -21,7 +21,7 @@ describe('API', function () {
       request.get('/').expect(200, done);
     });
     it('should not allow access with an invalid api key', function (done) {
-      request.get('/?api_key=notavalidapikey').expect(403, '{"message":"forbidden","code":403}', done);
+      request.get('/?api_key=notavalidapikey').expect(403, done);
     });
     it('should allow access with api key via GET parameter api_key', function (done) {
       request.get('/?api_key=thetestuserapikey').expect(200, done);
@@ -117,7 +117,7 @@ describe('API', function () {
         lat: 13,
         long: 37,
         message: 'Testmessage'
-      }).expect(403, '{"message":"forbidden","code":403}', done);
+      }).expect(403, done);
     });
   });
   describe('/posts/:id', function () {
