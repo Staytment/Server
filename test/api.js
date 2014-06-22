@@ -29,7 +29,6 @@ describe('API', function () {
     it('should allow access with api key via GET parameter apiKey', function (done) {
       request.get('/?apiKey=thetestuserapikey').expect(200, done);
     });
-
     it('should redirect /auth/google to Google oAuth2', function (done) {
       request.get('/auth/google').expect(302, function (err, res) {
         expect(res.header['location']).to.match(/^https:\/\/accounts.google.com\/o\/oauth2\/auth/);
@@ -42,82 +41,140 @@ describe('API', function () {
         done(err);
       });
     });
-//    it('should redirect /auth/twitter to Twitter oAuth1'); //, function (done) {
-//      request.get('/auth/twitter').expect(302, function (err, res) {
-//        expect(res.header['location']).to.match(/^https:\/\/www.twitter.com\//);
-//        done(err);
-//      })
-//    })
   });
 
   describe('/posts', function () {
-    it('should create a new post and return it on POST', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 13,
-        long: 37,
-        message: 'Testmessage'
-      }).expect(200, function (err, res) {
-        var post = res.body;
-        expect(post.user).to.equal(testuser._id.toString());
-        expect(post.lat).to.equal(13);
-        expect(post.long).to.equal(37);
-        expect(post.message).to.equal('Testmessage');
-        expect(post._id).to.exist;
-        done(err);
+    describe('HTTP GET', function () {
+      describe('without API key', function () {
+        it('should return 200 OK', function (done) {
+          request.get('/posts/').expect(200, done);
+        });
+      });
+      describe('with API key', function () {
+        it('should return 200 OK', function (done) {
+          request.get('/posts/?apiKey=thetestuserapikey').expect(200, done);
+        });
       });
     });
-    it('should not create a new post with missing parameter "lat" on POST', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        long: 37,
-        message: 'Testmessage'
-      }).expect(400, done);
-    });
-    it('should not create a new post with missing parameter "long" on POST', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 13,
-        message: 'Testmessage'
-      }).expect(400, done)
-    });
-    it('should not create a new post with missing parameter "message" on POST', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 13,
-        long: 37
-      }).expect(400, done);
-    });
-    it('should not create a new post with parameter "lat" bigger than 90', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 90.1,
-        long: 37,
-        message: 'Testmessage'
-      }).expect(400, done);
-    });
-    it('should not create a new post with parameter "lat" smaller than -90', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: -90.1,
-        long: 37,
-        message: 'Testmessage'
-      }).expect(400, done);
-    });
-    it('should not create a new post with parameter "long" bigger than 180', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 13,
-        long: 180.1,
-        message: 'Testmessage'
-      }).expect(400, done);
-    });
-    it('should not create a new post with parameter "long" smaller than -180', function (done) {
-      request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 13,
-        long: -180.1,
-        message: 'Testmessage'
-      }).expect(400, done);
-    });
-    it('should not create a new post without an api key', function (done) {
-      request.post('/posts/').send({
-        lat: 13,
-        long: 37,
-        message: 'Testmessage'
-      }).expect(403, done);
+    describe('HTTP POST', function () {
+      describe('without API key', function () {
+        it('should return 403 FORBIDDEN', function (done) {
+          request.post('/posts/').send({
+            lat: 13,
+            long: 37,
+            message: 'Testmessage'
+          }).expect(403, done);
+        });
+        it('should return 403 FORBIDDEN with missing parameter "lat"', function (done) {
+          request.post('/posts/').send({
+            long: 37,
+            message: 'Testmessage'
+          }).expect(403, done);
+        });
+        it('should return 403 FORBIDDEN with missing parameter "long"', function (done) {
+          request.post('/posts/').send({
+            lat: 13,
+            message: 'Testmessage'
+          }).expect(403, done)
+        });
+        it('should return 403 FORBIDDEN with missing parameter "message"', function (done) {
+          request.post('/posts/').send({
+            lat: 13,
+            long: 37
+          }).expect(403, done);
+        });
+        it('should return 403 FORBIDDEN with parameter "lat" bigger than 90', function (done) {
+          request.post('/posts/').send({
+            lat: 90.1,
+            long: 37,
+            message: 'Testmessage'
+          }).expect(403, done);
+        });
+        it('should return 403 FORBIDDEN with parameter "lat" smaller than -90', function (done) {
+          request.post('/posts/').send({
+            lat: -90.1,
+            long: 37,
+            message: 'Testmessage'
+          }).expect(403, done);
+        });
+        it('should return 403 FORBIDDEN with parameter "long" bigger than 180', function (done) {
+          request.post('/posts/').send({
+            lat: 13,
+            long: 180.1,
+            message: 'Testmessage'
+          }).expect(403, done);
+        });
+        it('should return 403 FORBIDDEN with parameter "long" smaller than -180', function (done) {
+          request.post('/posts/').send({
+            lat: 13,
+            long: -180.1,
+            message: 'Testmessage'
+          }).expect(403, done);
+        });
+      });
+      describe('with API key', function () {
+        it('should return 200 OK when creating a new post and return the post', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: 13,
+            long: 37,
+            message: 'Testmessage'
+          }).expect(200, function (err, res) {
+            var post = res.body;
+            expect(post.user).to.equal(testuser._id.toString());
+            expect(post.lat).to.equal(13);
+            expect(post.long).to.equal(37);
+            expect(post.message).to.equal('Testmessage');
+            expect(post._id).to.exist;
+            done(err);
+          });
+        });
+        it('should return 400 BAD REQUEST with missing parameter "lat"', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            long: 37,
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
+        it('should return 400 BAD REQUEST with missing parameter "long"', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: 13,
+            message: 'Testmessage'
+          }).expect(400, done)
+        });
+        it('should return 400 BAD REQUEST with missing parameter "message"', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: 13,
+            long: 37
+          }).expect(400, done);
+        });
+        it('should return 400 BAD REQUEST with parameter "lat" bigger than 90', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: 90.1,
+            long: 37,
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
+        it('should return 400 BAD REQUEST with parameter "lat" smaller than -90', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: -90.1,
+            long: 37,
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
+        it('should return 400 BAD REQUEST with parameter "long" bigger than 180', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: 13,
+            long: 180.1,
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
+        it('should return 400 BAD REQUEST with parameter "long" smaller than -180', function (done) {
+          request.post('/posts/?apiKey=thetestuserapikey').send({
+            lat: 13,
+            long: -180.1,
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
+      });
     });
   });
   describe('/posts/:id', function () {
@@ -145,79 +202,103 @@ describe('API', function () {
       });
     });
 
-    it('should delete own posts on HTTP DELETE /posts/:id', function (done) {
-//      console.log(my_post_id);
-//      console.log(other_post_id);
-      request.delete('/posts/' + my_post_id + '?apiKey=thetestuserapikey').expect(204, function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          posts.findOne({'_id': my_post_id}, function (err, doc) {
-            expect(doc).to.not.exist;
+    describe('HTTP GET', function () {
+      describe('without API key', function () {
+        it('should return 200 OK and the correct post', function (done) {
+          request.get('/posts/' + other_post_id).expect(200, function (err, res) {
+            var post = res.body;
+            expect(post.lat).to.equal(47);
+            expect(post.long).to.equal(11);
+            expect(post.message).to.equal('Testmessage');
+            expect(post._id).to.exist;
+            expect(post.user).to.equal(otheruser._id.toString());
+            expect(post.relevance).to.be.a('number');
             done(err);
           });
-        }
+        });
+        it('should return 404 NOT FOUND with an unkown post id', function (done) {
+          request.get('/posts/deadbeef').expect(404, done);
+        });
+        it('should return 400 BAD REQUEST with an invalid post id', function (done) {
+          request.get('/posts/valid_ids_may_only_be_hex_numbers').expect(400, done);
+        });
       });
-    });
-    it('should forbid deleting foreign posts on HTTP DELETE /posts/:id', function (done) {
-      request.delete('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(403, function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          posts.findOne({'_id': other_post_id}, function (err, doc) {
-            expect(doc).to.exist;
+      describe('with API key', function () {
+        it('should return 200 OK and the correct post', function (done) {
+          request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
+            var post = res.body;
+            expect(post.lat).to.equal(47);
+            expect(post.long).to.equal(11);
+            expect(post.message).to.equal('Testmessage');
+            expect(post._id).to.exist;
+            expect(post.user).to.equal(otheruser._id.toString());
+            expect(post.relevance).to.be.a('number');
             done(err);
           });
-        }
+        });
+        it('should return 404 NOT FOUND with an unkown post id', function (done) {
+          request.get('/posts/deadbeef?apiKey=thetestuserapikey').expect(404, done);
+        });
+        it('should return 400 BAD REQUEST with an invalid post id', function (done) {
+          request.get('/posts/valid_ids_may_only_be_hex_numbers?apiKey=thetestuserapikey').expect(400, done);
+        });
       });
     });
-    it('should forbid deleting posts on HTTP DELETE /posts/:id without api key', function (done) {
-      request.delete('/posts/' + other_post_id).expect(403, function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          posts.findOne({'_id': other_post_id}, function (err, doc) {
-            expect(doc).to.exist;
-            done(err);
+    describe('HTTP POST', function () {
+    });
+    describe('HTTP DELETE', function () {
+      describe('without API key', function () {
+        it('should return 403 FORBIDDEN when trying to delete a post', function (done) {
+          request.delete('/posts/' + other_post_id).expect(403, function (err, res) {
+            if (err) {
+              done(err);
+            } else {
+              posts.findOne({'_id': other_post_id}, function (err, doc) {
+                expect(doc).to.exist;
+                done(err);
+              });
+            }
           });
-        }
+        });
+        it('should return 403 FORBIDDEN when trying to delete an unkown post id', function (done) {
+          request.delete('/posts/deadbeef').expect(403, done);
+        });
+        it('should return 403 FORBIDDEN when trying to delete an invalid post id', function (done) {
+          request.delete('/posts/valid_ids_may_only_be_hex_numbers').expect(403, done);
+        });
       });
-    });
-    it('should return a post on HTTP GET /posts/:id with api key', function (done) {
-      request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
-        var post = res.body;
-        expect(post.lat).to.equal(47);
-        expect(post.long).to.equal(11);
-        expect(post.message).to.equal('Testmessage');
-        expect(post._id).to.exist;
-        expect(post.user).to.equal(otheruser._id.toString());
-        expect(post.relevance).to.be.a('number');
-        done(err);
+      describe('with API key', function () {
+        it('should return 204 NO CONTENT when deleting an own post', function (done) {
+          request.delete('/posts/' + my_post_id + '?apiKey=thetestuserapikey').expect(204, function (err, res) {
+            if (err) {
+              done(err);
+            } else {
+              posts.findOne({'_id': my_post_id}, function (err, doc) {
+                expect(doc).to.not.exist;
+                done(err);
+              });
+            }
+          });
+        });
+        it('should return 403 FORBIDDEN when trying to delete a foreign post', function (done) {
+          request.delete('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(403, function (err, res) {
+            if (err) {
+              done(err);
+            } else {
+              posts.findOne({'_id': other_post_id}, function (err, doc) {
+                expect(doc).to.exist;
+                done(err);
+              });
+            }
+          });
+        });
+        it('should return 404 NOT FOUND when trying to delete an unkown post id', function (done) {
+          request.delete('/posts/deadbeef?apiKey=thetestuserapikey').expect(404, done);
+        });
+        it('should return 400 BAD REQUEST when trying to delete an invalid post id', function (done) {
+          request.delete('/posts/valid_ids_may_only_be_hex_numbers?apiKey=thetestuserapikey').expect(400, done);
+        });
       });
-    });
-    it('should return a post on HTTP GET /posts/:id without api key', function (done) {
-      request.get('/posts/' + other_post_id).expect(200, function (err, res) {
-        var post = res.body;
-        expect(post.lat).to.equal(47);
-        expect(post.long).to.equal(11);
-        expect(post.message).to.equal('Testmessage');
-        expect(post._id).to.exist;
-        expect(post.user).to.equal(otheruser._id.toString());
-        expect(post.relevance).to.be.a('number');
-        done(err);
-      });
-    });
-    it('should return 404 when using HTTP GET /posts/:id with an unkown id with api key', function (done) {
-      request.get('/posts/deadbeef?apiKey=thetestuserapikey').expect(404, done);
-    });
-    it('should return 404 when using HTTP GET /posts/:id with an unkown id without api key', function (done) {
-      request.get('/posts/deadbeef').expect(404, done);
-    });
-    it('should return 400 when using HTTP GET /posts/:id with an invalid id with api key', function (done) {
-      request.get('/posts/valid_ids_may_only_be_hex_numbers?apiKey=thetestuserapikey').expect(400, done);
-    });
-    it('should return 400 when using HTTP GET /posts/:id with an invalid id without api key', function (done) {
-      request.get('/posts/valid_ids_may_only_be_hex_numbers').expect(400, done);
     });
   });
 });
