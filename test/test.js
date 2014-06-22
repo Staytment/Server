@@ -4,7 +4,6 @@ var users = db.get('users');
 var posts = db.get('posts');
 
 before(function () {
-  posts.remove();
   users.insert({
     provider: 'localhost',
     identifier: '1337',
@@ -22,6 +21,6 @@ before(function () {
 });
 
 after(function () {
-//  posts.remove();
   users.remove({apiKey: 'thetestuserapikey'});
+  users.remove({apiKey: 'theotheruserapikey'});
 });

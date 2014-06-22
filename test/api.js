@@ -42,7 +42,7 @@ describe('API', function () {
         done(err);
       });
     });
-    it('should redirect /auth/twitter to Twitter oAuth1'); //, function (done) {
+//    it('should redirect /auth/twitter to Twitter oAuth1'); //, function (done) {
 //      request.get('/auth/twitter').expect(302, function (err, res) {
 //        expect(res.header['location']).to.match(/^https:\/\/www.twitter.com\//);
 //        done(err);
