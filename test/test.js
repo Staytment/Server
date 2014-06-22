@@ -20,7 +20,14 @@ before(function () {
   });
 });
 
-after(function () {
-  users.remove({apiKey: 'thetestuserapikey'});
-  users.remove({apiKey: 'theotheruserapikey'});
+after(function (done) {
+  users.findOne({apiKey: 'thetestuserapikey'}, function (err, testuser) {
+    posts.remove({user: testuser._id});
+    users.remove(testuser);
+    users.findOne({apiKey: 'theotheruserapikey'}, function (err, testuser) {
+      posts.remove({user: testuser._id});
+      users.remove(testuser);
+      done();
+    });
+  });
 });
