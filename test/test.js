@@ -3,7 +3,7 @@ var db = require('../database');
 var users = db.get('users');
 var posts = db.get('posts');
 
-before(function () {
+before(function (done) {
   users.insert({
     provider: 'localhost',
     identifier: '1337',
@@ -18,16 +18,29 @@ before(function () {
     name: 'someone else',
     apiKey: 'theotheruserapikey'
   });
-  var testuser = users.insert({
+  users.insert({
     provider: 'localhost',
     identifier: '1339',
     email: 'someoneelse@localhost',
     name: 'someone else',
     apiKey: 'yetanotherkey'
-  });
 
-})
-;
+  }, function (err, testuser) {
+    for (var lat = -90; lat < 90; lat+=2) {
+      for (var long = -180; long < 180; long+=2) {
+        posts.insert({
+          lat: lat,
+          long: long,
+          message: 'Hello',
+          tags: [],
+          relevance: 100,
+          user: testuser._id
+        });
+      }
+    }
+    done();
+  });
+});
 
 after(function (done) {
   users.findOne({apiKey: 'thetestuserapikey'}, function (err, testuser) {
