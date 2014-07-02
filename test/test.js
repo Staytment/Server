@@ -18,7 +18,16 @@ before(function () {
     name: 'someone else',
     apiKey: 'theotheruserapikey'
   });
-});
+  var testuser = users.insert({
+    provider: 'localhost',
+    identifier: '1339',
+    email: 'someoneelse@localhost',
+    name: 'someone else',
+    apiKey: 'yetanotherkey'
+  });
+
+})
+;
 
 after(function (done) {
   users.findOne({apiKey: 'thetestuserapikey'}, function (err, testuser) {
@@ -27,7 +36,11 @@ after(function (done) {
     users.findOne({apiKey: 'theotheruserapikey'}, function (err, testuser) {
       posts.remove({user: testuser._id});
       users.remove(testuser);
-      done();
+      users.findOne({apiKey: 'yetanotherkey'}, function (err, testuser) {
+        posts.remove({user: testuser._id});
+        users.remove(testuser);
+        done();
+      });
     });
   });
 });

@@ -49,10 +49,50 @@ describe('API', function () {
         it('should return 200 OK', function (done) {
           request.get('/posts/').expect(200, done);
         });
+        it('should not return more than 25 posts', function (done) {
+          request.get('/posts/').expect(200, function (err, res) {
+            var posts = res.body;
+            expect(posts.length).to.be.lessThan(26);
+            done(err);
+          });
+        });
+        it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
+          request.get('/posts/?limit=10').expect(200, function (err, res) {
+            var posts = res.body;
+            expect(posts.length).to.be.lessThan(11);
+            done(err);
+          });
+        });
+        it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
+          request.get('/posts/?limit=26').expect(400, done);
+        });
+        it('should return 400 BAD REQUEST if parameter "limit" is below 1', function (done) {
+          request.get('/posts/?limit=0').expect(400, done);
+        });
       });
       describe('with API key', function () {
         it('should return 200 OK', function (done) {
           request.get('/posts/?apiKey=thetestuserapikey').expect(200, done);
+        });
+        it('should not return more than 25 posts', function (done) {
+          request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
+            var posts = res.body;
+            expect(posts.length).to.be.lessThan(26);
+            done(err);
+          });
+        });
+        it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
+          request.get('/posts/?limit=10&apiKey=thetestuserapikey').expect(200, function (err, res) {
+            var posts = res.body;
+            expect(posts.length).to.be.lessThan(11);
+            done(err);
+          });
+        });
+        it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
+          request.get('/posts/?limit=26&apiKey=thetestuserapikey').expect(400, done);
+        });
+        it('should return 400 BAD REQUEST if parameter "limit" is below 1', function (done) {
+          request.get('/posts/?limit=0&apiKey=thetestuserapikey').expect(400, done);
         });
       });
     });
@@ -83,28 +123,28 @@ describe('API', function () {
             long: 37
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN with parameter "lat" bigger than 90', function (done) {
+        it('should return 403 FORBIDDEN if parameter "lat" is above 90', function (done) {
           request.post('/posts/').send({
             lat: 90.1,
             long: 37,
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN with parameter "lat" smaller than -90', function (done) {
+        it('should return 403 FORBIDDEN if parameter "lat" is below -90', function (done) {
           request.post('/posts/').send({
             lat: -90.1,
             long: 37,
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN with parameter "long" bigger than 180', function (done) {
+        it('should return 403 FORBIDDEN if parameter "long" is above 180', function (done) {
           request.post('/posts/').send({
             lat: 13,
             long: 180.1,
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN with parameter "long" smaller than -180', function (done) {
+        it('should return 403 FORBIDDEN if parameter "long" is below -180', function (done) {
           request.post('/posts/').send({
             lat: 13,
             long: -180.1,
@@ -113,7 +153,7 @@ describe('API', function () {
         });
       });
       describe('with API key', function () {
-        it('should return 200 OK when creating a new post and return the post', function (done) {
+        it('should return 200 OK and return the created post', function (done) {
           request.post('/posts/?apiKey=thetestuserapikey').send({
             lat: 13,
             long: 37,
