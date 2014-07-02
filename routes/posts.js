@@ -12,13 +12,23 @@ exports.getPostList = {
     summary: 'Fetch a list of all posts (dev only)',
     method: 'GET',
     type: 'array',
+    nickname: 'getPostList',
+    parameters: [swagger.queryParam('limit', 'Limit the response to n posts. Valid range: 1-25, default 25.', 'Number')],
     items: {
       $ref: 'Post'
-    },
-    nickname: 'getPostList'
+    }
   },
   action: function (req, res) {
-    posts.find({}, {fields: config.posts.publicFields}, function (err, docs) {
+    req.assert('limit').isInt();
+    req.sanitize('limit').toInt();
+    var limit = req.param('limit');
+    if (limit === undefined) {
+      limit = 25;
+    } else if (limit < 1 || limit > 25) {
+      errors.invalid('limit', res);
+      return;
+    }
+    posts.find({}, {limit: limit, fields: config.posts.publicFields}, function (err, docs) {
       res.send(docs);
     });
   }
