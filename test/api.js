@@ -65,9 +65,17 @@ describe('API', function () {
         });
         it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
           request.get('/posts/?limit=26').expect(400, done);
+          request.get('/posts/?limit=100').expect(400, done);
         });
         it('should return 400 BAD REQUEST if parameter "limit" is below 1', function (done) {
           request.get('/posts/?limit=0').expect(400, done);
+          request.get('/posts/?limit=-5').expect(400, done);
+          request.get('/posts/?limit=-100').expect(400, done);
+        });
+        it('should return 400 BAD REQUEST if parameter "limit" is not a number', function (done) {
+          request.get('/posts/?limit=a').expect(400, done);
+          request.get('/posts/?limit=abc').expect(400, done);
+          request.get('/posts/?limit=äöü').expect(400, done);
         });
       });
       describe('with API key', function () {
