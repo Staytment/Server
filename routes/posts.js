@@ -19,12 +19,18 @@ exports.getPostList = {
     }
   },
   action: function (req, res) {
-    req.assert('limit').isInt();
-    req.sanitize('limit').toInt();
     var limit = req.param('limit');
-    if (limit === undefined) {
+    if (limit != undefined) {
+      req.assert('limit').isInt();
+      req.sanitize('limit').toInt();
+      if (req.validationErrors()) {
+        errors.invalid('limit', res);
+        return;
+      }
+    } else {
       limit = 25;
-    } else if (limit < 1 || limit > 25) {
+    }
+    if (limit < 1 || limit > 25) {
       errors.invalid('limit', res);
       return;
     }
