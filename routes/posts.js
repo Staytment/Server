@@ -34,7 +34,7 @@ exports.getPostList = {
       errors.invalid('limit', res);
       return;
     }
-    posts.find({}, {limit: limit, fields: config.posts.publicFields}, function (err, docs) {
+    posts.find({}, {limit: limit, fields: {coordinates: 1, message: 1, user: 1, relevance: 1, _id: 1}}, function (err, docs) {
       res.send(docs);
     });
   }
@@ -59,7 +59,7 @@ exports.getPost = {
       errors.invalid('postId', res);
       return;
     }
-    posts.findOne({_id: req.param('postId')}, {fields: config.posts.publicFields}, function (err, doc) {
+    posts.findOne({_id: req.param('postId')}, {fields: {coordinates: 1, message: 1, user: 1, relevance: 1, _id: 1}}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
         return
@@ -79,11 +79,10 @@ exports.createPost = {
     type: 'Post',
     nickname: 'createPost',
     parameters: [
-      swagger.bodyParam('post', 'JSON with the keys "lat", "long" and "message"', 'Post')
+      swagger.bodyParam('post', 'JSON with the keys "coordinates" and "message". Coordinates is an array with the keys "longitude" and "latitude", e.g. "[50, 9]"', 'Post')
     ],
     responseMessages: [
-      errors.invalid('lat'),
-      errors.invalid('long'),
+      errors.invalid('coordinates'),
       errors.invalid('message')
     ]
   },
@@ -92,27 +91,32 @@ exports.createPost = {
       errors.forbidden(res);
       return;
     }
-    req.assert('lat', 'not a valid latitude value').isLat();
-    req.assert('long', 'not a valid longitude value').isLong();
+
+    req.assert(['coordinates', 0], 'not a valid longitude value').isLong();
+    req.assert(['coordinates', 1], 'not a valid latitude value').isLat();
+
     req.assert('message', 'required').notEmpty();
-    req.sanitize('lat').toFloat();
-    req.sanitize('long').toFloat();
+    req.sanitize('coordinates[0]').toFloat();
+    req.sanitize('coordinates[1]').toFloat();
     req.sanitize('message').toString();
 
     var validationErrors = req.validationErrors();
     if (validationErrors) {
-      if (validationErrors[0].param == 'lat') {
-        errors.invalid('lat', res);
-      } else if (validationErrors[0].param == 'long') {
-        errors.invalid('long', res);
+      if (validationErrors[0].param == 'coordinates.0') {
+        errors.invalid('coordinates', res);
+      } else if (validationErrors[0].param == 'coordinates.1') {
+        errors.invalid('coordinates', res);
       } else if (validationErrors[0].param == 'message') {
         errors.invalid('message', res);
       }
       return;
     }
+    if (req.param('coordinates').length != 2) {
+      errors.invalid('coordinates', res);
+      return
+    }
     var post = {
-      lat: req.param('lat'),
-      long: req.param('long'),
+      coordinates: req.param('coordinates'),
       message: req.param('message'),
       tags: [],
       relevance: 100,
