@@ -227,6 +227,18 @@ describe('API', function () {
             message: 'Testmessage'
           }).expect(400, done);
         });
+        it('should return 400 BAD REQUEST if coordinates contains strings', function (done) {
+          request.post('/posts/').send({
+            coordinates: ['hello', 'world'],
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
+        it('should return 400 BAD REQUEST if coordinates contains lists', function (done) {
+          request.post('/posts/').send({
+            coordinates: [[2, 3], [4, 5]],
+            message: 'Testmessage'
+          }).expect(400, done);
+        });
       });
     });
   });
