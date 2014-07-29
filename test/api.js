@@ -177,10 +177,14 @@ describe('API', function () {
             message: 'Testmessage'
           }).expect(200, function (err, res) {
             var post = res.body;
-            expect(post.user).to.equal(testuser._id.toString());
-            expect(post.coordinates).to.eql([13, 37]);
-            expect(post.message).to.equal('Testmessage');
-            expect(post._id).to.exist;
+            expect(post.type).to.equal('Feature');
+            expect(post.properties.message).to.equal('Testmessage');
+            expect(post.properties.user).to.equal(testuser._id.toString());
+            expect(post.properties.relevance).to.be.a('number');
+            expect(post.properties.id).to.exist;
+            expect(post.geometry.type).to.equal('Point');
+            expect(post.geometry.coordinates).to.eql([13, 37]);
+
             done(err);
           });
         });
@@ -268,11 +272,13 @@ describe('API', function () {
         it('should return 200 OK and the correct post', function (done) {
           request.get('/posts/' + other_post_id).expect(200, function (err, res) {
             var post = res.body;
-            expect(post.coordinates).to.eql([11, 47]);
-            expect(post.message).to.equal('Testmessage');
-            expect(post._id).to.exist;
-            expect(post.user).to.equal(otheruser._id.toString());
-            expect(post.relevance).to.be.a('number');
+            expect(post.properties.message).to.equal('Testmessage');
+            expect(post.properties.user).to.equal(otheruser._id.toString());
+            expect(post.properties.relevance).to.be.a('number');
+            expect(post.properties.id).to.exist;
+            expect(post.geometry.type).to.equal('Point');
+            expect(post.geometry.coordinates).to.eql([11, 47]);
+
             done(err);
           });
         });
@@ -287,11 +293,13 @@ describe('API', function () {
         it('should return 200 OK and the correct post', function (done) {
           request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var post = res.body;
-            expect(post.coordinates).to.eql([11, 47]);
-            expect(post.message).to.equal('Testmessage');
-            expect(post._id).to.exist;
-            expect(post.user).to.equal(otheruser._id.toString());
-            expect(post.relevance).to.be.a('number');
+            expect(post.properties.message).to.equal('Testmessage');
+            expect(post.properties.user).to.equal(otheruser._id.toString());
+            expect(post.properties.relevance).to.be.a('number');
+            expect(post.properties.id).to.exist;
+            expect(post.geometry.type).to.equal('Point');
+            expect(post.geometry.coordinates).to.eql([11, 47]);
+
             done(err);
           });
         });
