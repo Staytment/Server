@@ -268,7 +268,7 @@ describe('API', function () {
         it('should return 200 OK and the correct post', function (done) {
           request.get('/posts/' + other_post_id).expect(200, function (err, res) {
             var post = res.body;
-            expect(post.coordinates).to.equal([11, 47]);
+            expect(post.coordinates).to.eql([11, 47]);
             expect(post.message).to.equal('Testmessage');
             expect(post._id).to.exist;
             expect(post.user).to.equal(otheruser._id.toString());
@@ -287,7 +287,7 @@ describe('API', function () {
         it('should return 200 OK and the correct post', function (done) {
           request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var post = res.body;
-            expect(post.coordinates).to.equal([11, 47]);
+            expect(post.coordinates).to.eql([11, 47]);
             expect(post.message).to.equal('Testmessage');
             expect(post._id).to.exist;
             expect(post.user).to.equal(otheruser._id.toString());
