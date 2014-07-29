@@ -79,7 +79,7 @@ exports.createPost = {
     type: 'Post',
     nickname: 'createPost',
     parameters: [
-      swagger.bodyParam('post', 'JSON with the keys "coordinates" and "message". Coordinates is an array with the keys "longitude" and "latitude", e.g. "[50, 9]"', 'Post')
+      swagger.bodyParam('post', 'JSON with the keys "coordinates" and "message". Coordinates is an array with the values for "longitude" and "latitude", e.g. "[50, 9]"', 'Post')
     ],
     responseMessages: [
       errors.invalid('coordinates'),
