@@ -29,8 +29,7 @@ before(function (done) {
     for (var lat = -90; lat < 90; lat+=2) {
       for (var long = -180; long < 180; long+=2) {
         posts.insert({
-          lat: lat,
-          long: long,
+          coordinates: [long, lat],
           message: 'Hello',
           tags: [],
           relevance: 100,

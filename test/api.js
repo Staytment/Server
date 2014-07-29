@@ -160,7 +160,6 @@ describe('API', function () {
         it('should return 403 FORBIDDEN if longitude is above 180', function (done) {
           request.post('/posts/').send({
             coordinates: [180.1, 37],
-            long: 180.1,
             message: 'Testmessage'
           }).expect(403, done);
         });
@@ -203,38 +202,37 @@ describe('API', function () {
           }).expect(400, done);
         });
         it('should return 400 BAD REQUEST if latitude is above 90', function (done) {
-          request.post('/posts/').send({
+          request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: [13, 90.1],
             message: 'Testmessage'
           }).expect(400, done);
         });
         it('should return 400 BAD REQUEST if latitude is below -90', function (done) {
-          request.post('/posts/').send({
+          request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: [13, -90.1],
             message: 'Testmessage'
           }).expect(400, done);
         });
         it('should return 400 BAD REQUEST if longitude is above 180', function (done) {
-          request.post('/posts/').send({
+          request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: [180.1, 37],
-            long: 180.1,
             message: 'Testmessage'
           }).expect(400, done);
         });
         it('should return 400 BAD REQUEST if longitude is below -180', function (done) {
-          request.post('/posts/').send({
+          request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: [-180.1, 37],
             message: 'Testmessage'
           }).expect(400, done);
         });
         it('should return 400 BAD REQUEST if coordinates contains strings', function (done) {
-          request.post('/posts/').send({
+          request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: ['hello', 'world'],
             message: 'Testmessage'
           }).expect(400, done);
         });
         it('should return 400 BAD REQUEST if coordinates contains lists', function (done) {
-          request.post('/posts/').send({
+          request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: [[2, 3], [4, 5]],
             message: 'Testmessage'
           }).expect(400, done);
