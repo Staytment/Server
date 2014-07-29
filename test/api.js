@@ -124,54 +124,49 @@ describe('API', function () {
       describe('without API key', function () {
         it('should return 403 FORBIDDEN', function (done) {
           request.post('/posts/').send({
-            lat: 13,
-            long: 37,
+            coordinates: [13, 37],
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN with missing parameter "lat"', function (done) {
+        it('should return 403 FORBIDDEN with one coordinate', function (done) {
           request.post('/posts/').send({
-            long: 37,
+            coordinates: [13],
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN with missing parameter "long"', function (done) {
+        it('should return 403 FORBIDDEN with three coordinates', function (done) {
           request.post('/posts/').send({
-            lat: 13,
+            coordinates: [13, 37, 42],
             message: 'Testmessage'
           }).expect(403, done)
         });
         it('should return 403 FORBIDDEN with missing parameter "message"', function (done) {
           request.post('/posts/').send({
-            lat: 13,
-            long: 37
+            coordinates: [13, 37]
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN if parameter "lat" is above 90', function (done) {
+        it('should return 403 FORBIDDEN if latitude is above 90', function (done) {
           request.post('/posts/').send({
-            lat: 90.1,
-            long: 37,
+            coordinates: [13, 90.1],
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN if parameter "lat" is below -90', function (done) {
+        it('should return 403 FORBIDDEN if latitude is below -90', function (done) {
           request.post('/posts/').send({
-            lat: -90.1,
-            long: 37,
+            coordinates: [13, -90.1],
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN if parameter "long" is above 180', function (done) {
+        it('should return 403 FORBIDDEN if longitude is above 180', function (done) {
           request.post('/posts/').send({
-            lat: 13,
+            coordinates: [180.1, 37],
             long: 180.1,
             message: 'Testmessage'
           }).expect(403, done);
         });
-        it('should return 403 FORBIDDEN if parameter "long" is below -180', function (done) {
+        it('should return 403 FORBIDDEN if longitude is below -180', function (done) {
           request.post('/posts/').send({
-            lat: 13,
-            long: -180.1,
+            coordinates: [-180.1, 37],
             message: 'Testmessage'
           }).expect(403, done);
         });
@@ -179,62 +174,56 @@ describe('API', function () {
       describe('with API key', function () {
         it('should return 200 OK and return the created post', function (done) {
           request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: 13,
-            long: 37,
+            coordinates: [13, 37],
             message: 'Testmessage'
           }).expect(200, function (err, res) {
             var post = res.body;
             expect(post.user).to.equal(testuser._id.toString());
-            expect(post.lat).to.equal(13);
-            expect(post.long).to.equal(37);
+            expect(post.coordinates).to.equal([13, 37]);
             expect(post.message).to.equal('Testmessage');
             expect(post._id).to.exist;
             done(err);
           });
         });
-        it('should return 400 BAD REQUEST with missing parameter "lat"', function (done) {
+        it('should return 400 BAD REQUEST with one coordinate', function (done) {
           request.post('/posts/?apiKey=thetestuserapikey').send({
-            long: 37,
+            coordinates: [13],
             message: 'Testmessage'
           }).expect(400, done);
         });
-        it('should return 400 BAD REQUEST with missing parameter "long"', function (done) {
+        it('should return 400 BAD REQUEST with three coordinate', function (done) {
           request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: 13,
+            coordinates: [13, 37, 42],
             message: 'Testmessage'
           }).expect(400, done)
         });
         it('should return 400 BAD REQUEST with missing parameter "message"', function (done) {
           request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: 13,
-            long: 37
+            coordinates: [13, 37]
           }).expect(400, done);
         });
-        it('should return 400 BAD REQUEST with parameter "lat" bigger than 90', function (done) {
-          request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: 90.1,
-            long: 37,
+        it('should return 400 BAD REQUEST if latitude is above 90', function (done) {
+          request.post('/posts/').send({
+            coordinates: [13, 90.1],
             message: 'Testmessage'
           }).expect(400, done);
         });
-        it('should return 400 BAD REQUEST with parameter "lat" smaller than -90', function (done) {
-          request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: -90.1,
-            long: 37,
+        it('should return 400 BAD REQUEST if latitude is below -90', function (done) {
+          request.post('/posts/').send({
+            coordinates: [13, -90.1],
             message: 'Testmessage'
           }).expect(400, done);
         });
-        it('should return 400 BAD REQUEST with parameter "long" bigger than 180', function (done) {
-          request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: 13,
+        it('should return 400 BAD REQUEST if longitude is above 180', function (done) {
+          request.post('/posts/').send({
+            coordinates: [180.1, 37],
             long: 180.1,
             message: 'Testmessage'
           }).expect(400, done);
         });
-        it('should return 400 BAD REQUEST with parameter "long" smaller than -180', function (done) {
-          request.post('/posts/?apiKey=thetestuserapikey').send({
-            lat: 13,
-            long: -180.1,
+        it('should return 400 BAD REQUEST if longitude is below -180', function (done) {
+          request.post('/posts/').send({
+            coordinates: [-180.1, 37],
             message: 'Testmessage'
           }).expect(400, done);
         });
@@ -246,8 +235,7 @@ describe('API', function () {
     var other_post_id;
     before(function (done) {
       request.post('/posts/?apiKey=thetestuserapikey').send({
-        lat: 42,
-        long: 21,
+        coordinates: [21, 42],
         message: 'Testmessage'
       }).end(function (err, res) {
         if (err) {
@@ -255,8 +243,7 @@ describe('API', function () {
         } else {
           my_post_id = res.body._id;
           request.post('/posts/?apiKey=theotheruserapikey').send({
-            lat: 47,
-            long: 11,
+            coordinates: [11, 47],
             message: 'Testmessage'
           }).end(function (err, res) {
             other_post_id = res.body._id;
@@ -271,8 +258,7 @@ describe('API', function () {
         it('should return 200 OK and the correct post', function (done) {
           request.get('/posts/' + other_post_id).expect(200, function (err, res) {
             var post = res.body;
-            expect(post.lat).to.equal(47);
-            expect(post.long).to.equal(11);
+            expect(post.coordinates).to.equal([11, 47]);
             expect(post.message).to.equal('Testmessage');
             expect(post._id).to.exist;
             expect(post.user).to.equal(otheruser._id.toString());
@@ -291,8 +277,7 @@ describe('API', function () {
         it('should return 200 OK and the correct post', function (done) {
           request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var post = res.body;
-            expect(post.lat).to.equal(47);
-            expect(post.long).to.equal(11);
+            expect(post.coordinates).to.equal([11, 47]);
             expect(post.message).to.equal('Testmessage');
             expect(post._id).to.exist;
             expect(post.user).to.equal(otheruser._id.toString());

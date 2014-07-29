@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var logfmt = require('logfmt');
 var validator = require('./data-validator');
 var swagger = require('swagger-node-express');
-var models = require('./models.json');
 var auth = require('./routes/auth');
 
 var posts = require('./routes/posts');
@@ -50,7 +49,6 @@ app.all('/', require('./routes/index'));
 
 swagger.setAppHandler(app);
 swagger.configureSwaggerPaths('', '/api-docs', '');
-swagger.addModels(models);
 
 swagger.addGet(posts.getPostList);
 swagger.addGet(posts.getPost);
