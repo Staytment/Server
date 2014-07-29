@@ -178,7 +178,7 @@ describe('API', function () {
           }).expect(200, function (err, res) {
             var post = res.body;
             expect(post.user).to.equal(testuser._id.toString());
-            expect(post.coordinates).to.equal([13, 37]);
+            expect(post.coordinates).to.eql([13, 37]);
             expect(post.message).to.equal('Testmessage');
             expect(post._id).to.exist;
             done(err);
