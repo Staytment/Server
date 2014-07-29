@@ -255,12 +255,12 @@ describe('API', function () {
         if (err) {
           done(err);
         } else {
-          my_post_id = res.body._id;
+          my_post_id = res.body.properties.id;
           request.post('/posts/?apiKey=theotheruserapikey').send({
             coordinates: [11, 47],
             message: 'Testmessage'
           }).end(function (err, res) {
-            other_post_id = res.body._id;
+            other_post_id = res.body.properties.id;
             done(err);
           });
         }

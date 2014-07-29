@@ -64,7 +64,19 @@ exports.getPost = {
         errors.notFound('Post', res);
         return
       }
-      res.json(doc);
+      res.json({
+        type: 'Feature',
+        properties: {
+          message: doc.message,
+          user: doc.user,
+          relevance: doc.relevance,
+          id: doc._id
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: doc.coordinates
+        }
+      })
     });
   }
 };
@@ -123,7 +135,19 @@ exports.createPost = {
       user: req.user._id
     };
     posts.insert(post);
-    res.json(post);
+    res.json({
+      type: 'Feature',
+      properties: {
+        message: post.message,
+        user: post.user,
+        relevance: post.relevance,
+        id: post._id
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: post.coordinates
+      }
+    });
   }
 };
 
