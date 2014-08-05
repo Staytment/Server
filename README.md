@@ -26,7 +26,7 @@ Install NodeJS dependencies:
   
 Run it:
 
-    nodejs ./frozen-forest.js
+    node ./frozen-forest.js
   
 In a second window, you might want to run the unittests to see if everything is working as expected. Install mocha with
 npm first, but globally with the `-g` option, then, run it:
