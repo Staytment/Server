@@ -26,6 +26,10 @@ before(function (done) {
     apiKey: 'yetanotherkey'
 
   }, function (err, testuser) {
+    if (err) {
+      done(err);
+      return;
+    }
     for (var lat = -90; lat < 90; lat+=2) {
       for (var long = -180; long < 180; long+=2) {
         posts.insert({
