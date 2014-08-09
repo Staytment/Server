@@ -34,7 +34,7 @@ exports.getPostList = {
       errors.invalid('limit', res);
       return;
     }
-    posts.find({}, {limit: limit, fields: {coordinates: 1, message: 1, user: 1, relevance: 1, _id: 1}}, function (err, docs) {
+    posts.find({}, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
       res.send(docs);
     });
   }
@@ -59,24 +59,12 @@ exports.getPost = {
       errors.invalid('postId', res);
       return;
     }
-    posts.findOne({_id: req.param('postId')}, {fields: {coordinates: 1, message: 1, user: 1, relevance: 1, _id: 1}}, function (err, doc) {
+    posts.findOne({_id: req.param('postId')}, {fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
         return
       }
-      res.json({
-        type: 'Feature',
-        properties: {
-          message: doc.message,
-          user: doc.user,
-          relevance: doc.relevance,
-          id: doc._id
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: doc.coordinates
-        }
-      })
+      res.json(doc);
     });
   }
 };
@@ -128,29 +116,23 @@ exports.createPost = {
       return
     }
     var post = {
-      coordinates: req.param('coordinates'),
-      message: req.param('message'),
-      tags: [],
-      relevance: 100,
-      user: {
-        _id: req.user._id,
-        name: req.user.name
+      type: 'Feature',
+      geometry : {
+        type: 'Point',
+        coordinates: req.param('coordinates')
+      },
+      properties: {
+        message: req.param('message'),
+        tags: [],
+        relevance: 100,
+        user: {
+          _id: req.user._id,
+          name: req.user.name
+        }
       }
     };
     posts.insert(post);
-    res.json({
-      type: 'Feature',
-      properties: {
-        message: post.message,
-        user: post.user,
-        relevance: post.relevance,
-        id: post._id
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: post.coordinates
-      }
-    });
+    res.json(post);
   }
 };
 
@@ -182,11 +164,11 @@ exports.deletePost = {
         errors.notFound('Post', res);
         return
       }
-      if (!doc.user._id.equals(req.user._id)) {
+      if (!doc.properties.user._id.equals(req.user._id)) {
         errors.forbidden(res);
         return
       }
-      posts.findAndModify({_id: req.param('postId'), 'user._id': req.user._id}, {}, {remove: true}, function (err, doc) {
+      posts.findAndModify({_id: req.param('postId'), 'properties.user._id': req.user._id}, {}, {remove: true}, function (err, doc) {
         res.send(err || 204);
       });
     });

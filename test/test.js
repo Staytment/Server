@@ -33,13 +33,19 @@ before(function (done) {
     for (var lat = -90; lat < 90; lat+=2) {
       for (var long = -180; long < 180; long+=2) {
         posts.insert({
-          coordinates: [long, lat],
-          message: 'Hello',
-          tags: [],
-          relevance: 100,
-          user: {
-            _id: testuser._id,
-            name: testuser.name
+          type: 'Feature',
+          geometry : {
+            type: 'Point',
+            coordinates: [long, lat]
+          },
+          properties: {
+            message: 'Hello',
+            tags: [],
+            relevance: 100,
+            user: {
+              _id: testuser._id,
+              name: testuser.name
+            }
           }
         });
       }
