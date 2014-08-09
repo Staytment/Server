@@ -35,7 +35,10 @@ exports.getPostList = {
       return;
     }
     posts.find({}, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
-      res.send(docs);
+      res.send({
+        type: 'FeatureCollection',
+        features: docs
+      });
     });
   }
 };
