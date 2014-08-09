@@ -67,7 +67,7 @@ describe('API', function () {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
             var post = posts[0];
-            expect(post.coordinates.length).to.equal(2);
+            expect(post.geometry.coordinates.length).to.equal(2);
             done(err);
           });
         });
@@ -75,7 +75,7 @@ describe('API', function () {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
             var post = posts[0];
-            expect(post.message).to.exist;
+            expect(post.properties.message).to.exist;
             done(err);
           });
         });
@@ -83,8 +83,8 @@ describe('API', function () {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
             var post = posts[0];
-            expect(post.user._id).to.exist;
-            expect(post.user.name).to.exist;
+            expect(post.properties.user._id).to.exist;
+            expect(post.properties.user.name).to.exist;
             done(err);
           });
         });
@@ -129,7 +129,7 @@ describe('API', function () {
           request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var posts = res.body;
             var post = posts[0];
-            expect(post.coordinates.length).to.equal(2);
+            expect(post.geometry.coordinates.length).to.equal(2);
             done(err);
           });
           it('should return posts with a message text', function (done) {
@@ -232,7 +232,6 @@ describe('API', function () {
             expect(post.properties.user._id).to.equal(testuser._id.toString());
             expect(post.properties.user.name).to.equal(testuser.name);
             expect(post.properties.relevance).to.be.a('number');
-            expect(post.properties.id).to.exist;
             expect(post.geometry.type).to.equal('Point');
             expect(post.geometry.coordinates).to.eql([13, 37]);
 
@@ -306,12 +305,12 @@ describe('API', function () {
         if (err) {
           done(err);
         } else {
-          my_post_id = res.body.properties.id;
+          my_post_id = res.body._id;
           request.post('/posts/?apiKey=theotheruserapikey').send({
             coordinates: [11, 47],
             message: 'Testmessage'
           }).end(function (err, res) {
-            other_post_id = res.body.properties.id;
+            other_post_id = res.body._id;
             done(err);
           });
         }
@@ -327,7 +326,6 @@ describe('API', function () {
             expect(post.properties.user._id).to.equal(otheruser._id.toString());
             expect(post.properties.user.name).to.equal(otheruser.name);
             expect(post.properties.relevance).to.be.a('number');
-            expect(post.properties.id).to.exist;
             expect(post.geometry.type).to.equal('Point');
             expect(post.geometry.coordinates).to.eql([11, 47]);
 
@@ -349,7 +347,6 @@ describe('API', function () {
             expect(post.properties.user._id).to.equal(otheruser._id.toString());
             expect(post.properties.user.name).to.equal(otheruser.name);
             expect(post.properties.relevance).to.be.a('number');
-            expect(post.properties.id).to.exist;
             expect(post.geometry.type).to.equal('Point');
             expect(post.geometry.coordinates).to.eql([11, 47]);
 
