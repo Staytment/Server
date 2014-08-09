@@ -7,7 +7,7 @@ Install NodeJS, Node Package Manager and MongoDB:
 
     sudo apt-get install nodejs npm mongodb
 
-On Ubuntu, please create this symlink for node. It is possible for some nodejs programs, e.g. mocha.
+On Ubuntu, please create this symlink for node. It is required for some nodejs programs, e.g. mocha.
 
     ln -s /usr/bin/nodejs /usr/bin/node
 
