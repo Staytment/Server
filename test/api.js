@@ -63,6 +63,31 @@ describe('API', function () {
             done(err);
           });
         });
+        it('should return posts with a coordinate pair', function (done) {
+          request.get('/posts/').expect(200, function (err, res) {
+            var posts = res.body;
+            var post = posts[0];
+            expect(post.coordinates.length).to.equal(2);
+            done(err);
+          });
+        });
+        it('should return posts with a message text', function (done) {
+          request.get('/posts/').expect(200, function (err, res) {
+            var posts = res.body;
+            var post = posts[0];
+            expect(post.message).to.exist;
+            done(err);
+          });
+        });
+        it('should return posts with a username and an id', function (done) {
+          request.get('/posts/').expect(200, function (err, res) {
+            var posts = res.body;
+            var post = posts[0];
+            expect(post.user._id).to.exist;
+            expect(post.user.name).to.exist;
+            done(err);
+          });
+        });
         it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
           request.get('/posts/?limit=26').expect(400, done);
         });
@@ -98,6 +123,31 @@ describe('API', function () {
             var posts = res.body;
             expect(posts.length).to.be.lessThan(11);
             done(err);
+          });
+        });
+        it('should return posts with a coordinate pair', function (done) {
+          request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
+            var posts = res.body;
+            var post = posts[0];
+            expect(post.coordinates.length).to.equal(2);
+            done(err);
+          });
+          it('should return posts with a message text', function (done) {
+            request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
+              var posts = res.body;
+              var post = posts[0];
+              expect(post.message).to.exist;
+              done(err);
+            });
+          });
+          it('should return posts with a username and an id', function (done) {
+            request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
+              var posts = res.body;
+              var post = posts[0];
+              expect(post.user._id).to.exist;
+              expect(post.user.name).to.exist;
+              done(err);
+            });
           });
         });
         it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
@@ -179,7 +229,8 @@ describe('API', function () {
             var post = res.body;
             expect(post.type).to.equal('Feature');
             expect(post.properties.message).to.equal('Testmessage');
-            expect(post.properties.user).to.equal(testuser._id.toString());
+            expect(post.properties.user._id).to.equal(testuser._id.toString());
+            expect(post.properties.user.name).to.equal(testuser.name);
             expect(post.properties.relevance).to.be.a('number');
             expect(post.properties.id).to.exist;
             expect(post.geometry.type).to.equal('Point');
@@ -273,7 +324,8 @@ describe('API', function () {
           request.get('/posts/' + other_post_id).expect(200, function (err, res) {
             var post = res.body;
             expect(post.properties.message).to.equal('Testmessage');
-            expect(post.properties.user).to.equal(otheruser._id.toString());
+            expect(post.properties.user._id).to.equal(otheruser._id.toString());
+            expect(post.properties.user.name).to.equal(otheruser.name);
             expect(post.properties.relevance).to.be.a('number');
             expect(post.properties.id).to.exist;
             expect(post.geometry.type).to.equal('Point');
@@ -294,7 +346,8 @@ describe('API', function () {
           request.get('/posts/' + other_post_id + '?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var post = res.body;
             expect(post.properties.message).to.equal('Testmessage');
-            expect(post.properties.user).to.equal(otheruser._id.toString());
+            expect(post.properties.user._id).to.equal(otheruser._id.toString());
+            expect(post.properties.user.name).to.equal(otheruser.name);
             expect(post.properties.relevance).to.be.a('number');
             expect(post.properties.id).to.exist;
             expect(post.geometry.type).to.equal('Point');

@@ -132,7 +132,10 @@ exports.createPost = {
       message: req.param('message'),
       tags: [],
       relevance: 100,
-      user: req.user._id
+      user: {
+        _id: req.user._id,
+        name: req.user.name
+      }
     };
     posts.insert(post);
     res.json({
@@ -179,11 +182,11 @@ exports.deletePost = {
         errors.notFound('Post', res);
         return
       }
-      if (!doc.user.equals(req.user._id)) {
+      if (!doc.user._id.equals(req.user._id)) {
         errors.forbidden(res);
         return
       }
-      posts.findAndModify({_id: req.param('postId'), user: req.user._id}, {}, {remove: true}, function (err, doc) {
+      posts.findAndModify({_id: req.param('postId'), 'user._id': req.user._id}, {}, {remove: true}, function (err, doc) {
         res.send(err || 204);
       });
     });

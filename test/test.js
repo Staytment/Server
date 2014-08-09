@@ -37,7 +37,10 @@ before(function (done) {
           message: 'Hello',
           tags: [],
           relevance: 100,
-          user: testuser._id
+          user: {
+            _id: testuser._id,
+            name: testuser.name
+          }
         });
       }
     }
