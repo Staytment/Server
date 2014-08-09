@@ -52,21 +52,21 @@ describe('API', function () {
         it('should not return more than 25 posts', function (done) {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
-            expect(posts.length).to.be.lessThan(26);
+            expect(posts.features.length).to.be.lessThan(26);
             done(err);
           });
         });
         it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
           request.get('/posts/?limit=10').expect(200, function (err, res) {
             var posts = res.body;
-            expect(posts.length).to.be.lessThan(11);
+            expect(posts.features.length).to.be.lessThan(11);
             done(err);
           });
         });
         it('should return posts with a coordinate pair', function (done) {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
-            var post = posts[0];
+            var post = posts.features[0];
             expect(post.geometry.coordinates.length).to.equal(2);
             done(err);
           });
@@ -74,7 +74,7 @@ describe('API', function () {
         it('should return posts with a message text', function (done) {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
-            var post = posts[0];
+            var post = posts.features[0];
             expect(post.properties.message).to.exist;
             done(err);
           });
@@ -82,7 +82,7 @@ describe('API', function () {
         it('should return posts with a username and an id', function (done) {
           request.get('/posts/').expect(200, function (err, res) {
             var posts = res.body;
-            var post = posts[0];
+            var post = posts.features[0];
             expect(post.properties.user._id).to.exist;
             expect(post.properties.user.name).to.exist;
             done(err);
@@ -114,28 +114,28 @@ describe('API', function () {
         it('should not return more than 25 posts', function (done) {
           request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var posts = res.body;
-            expect(posts.length).to.be.lessThan(26);
+            expect(posts.features.length).to.be.lessThan(26);
             done(err);
           });
         });
         it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
           request.get('/posts/?limit=10&apiKey=thetestuserapikey').expect(200, function (err, res) {
             var posts = res.body;
-            expect(posts.length).to.be.lessThan(11);
+            expect(posts.features.length).to.be.lessThan(11);
             done(err);
           });
         });
         it('should return posts with a coordinate pair', function (done) {
           request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
             var posts = res.body;
-            var post = posts[0];
+            var post = posts.features[0];
             expect(post.geometry.coordinates.length).to.equal(2);
             done(err);
           });
           it('should return posts with a message text', function (done) {
             request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
               var posts = res.body;
-              var post = posts[0];
+              var post = posts.features[0];
               expect(post.message).to.exist;
               done(err);
             });
@@ -143,7 +143,7 @@ describe('API', function () {
           it('should return posts with a username and an id', function (done) {
             request.get('/posts/?apiKey=thetestuserapikey').expect(200, function (err, res) {
               var posts = res.body;
-              var post = posts[0];
+              var post = posts.features[0];
               expect(post.user._id).to.exist;
               expect(post.user.name).to.exist;
               done(err);
