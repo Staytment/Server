@@ -55,7 +55,7 @@ swagger.addGet(posts.getPost);
 swagger.addPost(posts.createPost);
 swagger.addDelete(posts.deletePost);
 
-swagger.configure(process.env.DOMAIN_API || 'http://localhost:5000', '0.4');
+swagger.configure(process.env.DOMAIN_API || 'http://localhost:5000', '0.4.1');
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function () {
   console.log('Listening on localhost:' + port);
