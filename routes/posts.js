@@ -34,7 +34,46 @@ exports.getPostList = {
       errors.invalid('limit', res);
       return;
     }
-    posts.find({}, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
+    posts.find({
+      geometry: {
+//        $geoWithin: {
+//          $geometry: {
+//            type: 'Polygon',
+//            coordinates: [
+//              [
+//                [
+//                  3.955078125,
+//                  44.99588261816546
+//                ],
+//                [
+//                  3.955078125,
+//                  54.85131525968609
+//                ],
+//                [
+//                  20.698242187499996,
+//                  54.85131525968609
+//                ],
+//                [
+//                  20.698242187499996,
+//                  44.99588261816546
+//                ],
+//                [
+//                  3.955078125,
+//                  44.99588261816546
+//                ]
+//              ]
+//            ]
+//          }
+//        }
+        $near : {
+          $geometry: {
+            type : 'Point',
+            coordinates : [15.5045, 51.0293]
+          } ,
+          $maxDistance : 10000000
+        }
+      }
+    }, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
