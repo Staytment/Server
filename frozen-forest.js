@@ -1,6 +1,3 @@
-// Newrelic monitoring
-require('newrelic');
-
 var db = require('./database');
 var express = require('express');
 var compression = require('compression');
