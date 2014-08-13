@@ -35,7 +35,7 @@ exports.getPostList = {
       return;
     }
     posts.find({
-      geometry: {
+//      geometry: {
 //        $geoWithin: {
 //          $geometry: {
 //            type: 'Polygon',
@@ -65,14 +65,14 @@ exports.getPostList = {
 //            ]
 //          }
 //        }
-        $near : {
-          $geometry: {
-            type : 'Point',
-            coordinates : [15.5045, 51.0293]
-          } ,
-          $maxDistance : 10000000
-        }
-      }
+//        $near : {
+//          $geometry: {
+//            type : 'Point',
+//            coordinates : [3.955078125, 44.99588261816546]
+//          },
+//          $maxDistance : 1000000000
+//        }
+//      }
     }, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
