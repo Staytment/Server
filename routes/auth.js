@@ -32,8 +32,8 @@ var users = db.get('users');
 //));
 
 passport.use(new GoogleStrategy({
-    clientID: '832914506447-31krh9ifqmk2pkmedfdjcsdt8ge8i8r0.apps.googleusercontent.com',
-    clientSecret: '_20kaK7yOD1DnMPk_OUANc0k',
+    clientID: '832914506447-ht3vms2nufelbajlgjkhorv2vj9b2v71.apps.googleusercontent.com',
+    clientSecret: process.env.GOOGLE_OAUTH_SECRET,
     callbackURL: (process.env.DOMAIN_API || 'http://localhost:5000') + '/auth/google/callback'
   },
   function(accessToken, refreshToken, profile, done) {
@@ -60,7 +60,7 @@ passport.use(new GoogleStrategy({
 
 passport.use(new FacebookStrategy({
     clientID: '629317600482580',
-    clientSecret: '67c60db7bbccb529e836386cbfced480',
+    clientSecret: process.env.FACEBOOK_OAUTH_SECRET,
     callbackURL: (process.env.DOMAIN_API || 'http://localhost:5000') + '/auth/facebook/callback'
   },
   function (accessToken, refreshToken, profile, done) {
@@ -86,7 +86,7 @@ passport.use(new FacebookStrategy({
 
 passport.use(new TwitterStrategy({
     consumerKey: 'z37mM6PwnBKSvBLZEjMQMPSCg',
-    consumerSecret: 'wUok4JZoRMp5GVDSxi2ri7CPTeQcXCoFYlXX5935kwKRhEQRXN',
+    consumerSecret: process.env.TWITTER_OAUTH_SECRET,
     callbackURL: (process.env.DOMAIN_API || 'http://localhost:5000') + '/auth/twitter/callback'
   },
   function(token, tokenSecret, profile, done) {
