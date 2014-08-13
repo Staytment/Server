@@ -1,16 +1,16 @@
 {
   "name": "frozen-forest",
   "version": "0.1.5",
-  "description": "API for Staytment",
+  "description": "Serverside API for Staytment",
   "main": "frozen-forest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:soeren/frozen-forest.git"
+    "url": "git@github.com:Staytment/Server.git"
   },
-  "author": "Trottl",
+  "author": "Staytment",
   "license": "-",
   "dependencies": {
     "logfmt": "~0.21.0",

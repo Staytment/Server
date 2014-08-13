@@ -13,7 +13,7 @@ On Ubuntu, please create this symlink for node. It is required for some nodejs p
 
 Download the repository:
 
-    git clone git@bitbucket.org:trottldevelopement/frozen-forest.git
+    git clone git@github.com:Staytment/Server.git
     cd frozen-forest
   
 You might want to check out a tagged version. Please note that versions that are not tagged might fail our unittests.
