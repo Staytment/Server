@@ -32,7 +32,7 @@ var users = db.get('users');
 
 passport.use(new GoogleStrategy({
     clientID: '832914506447-ht3vms2nufelbajlgjkhorv2vj9b2v71.apps.googleusercontent.com',
-    clientSecret: process.env.GOOGLE_OAUTH_SECRET,
+    clientSecret: process.env.GOOGLE_OAUTH_SECRET || 'deadbeef',
     callbackURL: (process.env.DOMAIN_API || 'http://localhost:5000') + '/auth/google/callback'
   },
   function(accessToken, refreshToken, profile, done) {
@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
 
 passport.use(new FacebookStrategy({
     clientID: '629317600482580',
-    clientSecret: process.env.FACEBOOK_OAUTH_SECRET,
+    clientSecret: process.env.FACEBOOK_OAUTH_SECRET || 'deadbeef',
     callbackURL: (process.env.DOMAIN_API || 'http://localhost:5000') + '/auth/facebook/callback'
   },
   function (accessToken, refreshToken, profile, done) {

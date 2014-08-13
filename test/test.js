@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var db = require('../database');
 var users = db.get('users');
 var posts = db.get('posts');
+var app = require('../frozen-forest');
 
 before(function (done) {
   users.insert({
