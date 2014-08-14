@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var request = require('supertest')('http://localhost:5000');
-var db = require('../database');
+var db = require(__dirname+'/../database');
 var users = db.get('users');
 var posts = db.get('posts');
 
@@ -9,9 +9,11 @@ describe('API', function () {
   var otheruser;
   before(function () {
     users.findOne({apiKey: 'thetestuserapikey'}, function (err, doc) {
+      expect(err).to.be.null;
       testuser = doc;
     });
     users.findOne({apiKey: 'theotheruserapikey'}, function (err, doc) {
+      expect(err).to.be.null;
       otheruser = doc;
     });
   });
