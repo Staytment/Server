@@ -61,7 +61,7 @@ app.listen(port, function () {
   if(runOptions.ready) runOptions.ready();
 });
 
-var runOptions;
+var runOptions = {};
 module.exports = {};
 module.exports.runOptions = function(options){
   runOptions = options;
