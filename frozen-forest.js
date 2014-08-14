@@ -28,6 +28,7 @@ app.use(function (req, res, next) {
   if (apiKey) {
     db.get('users').findOne({apiKey: apiKey}, function (err, user) {
       if (!user) {
+        logfmt.log('could not find user with api key: '+apiKey);
         res.json({
           message: 'forbidden',
           code: 403
