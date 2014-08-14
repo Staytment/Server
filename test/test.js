@@ -12,47 +12,49 @@ app.ready = function() {
       email: 'test@localhost',
       name: 'testuser',
       apiKey: 'thetestuserapikey'
-    });
-    users.insert({
-      provider: 'localhost',
-      identifier: '1338',
-      email: 'someone@localhost',
-      name: 'someone else',
-      apiKey: 'theotheruserapikey'
-    });
-    users.insert({
-      provider: 'localhost',
-      identifier: '1339',
-      email: 'someoneelse@localhost',
-      name: 'someone else',
-      apiKey: 'yetanotherkey'
+    }, function(){
+      users.insert({
+        provider: 'localhost',
+        identifier: '1338',
+        email: 'someone@localhost',
+        name: 'someone else',
+        apiKey: 'theotheruserapikey'
+      }, function(){
+        users.insert({
+          provider: 'localhost',
+          identifier: '1339',
+          email: 'someoneelse@localhost',
+          name: 'someone else',
+          apiKey: 'yetanotherkey'
 
-    }, function (err, testuser) {
-      if (err) {
-        done(err);
-        return;
-      }
-      for (var lat = -90; lat < 90; lat+=2) {
-        for (var long = -180; long < 180; long+=2) {
-          posts.insert({
-            type: 'Feature',
-            geometry : {
-              type: 'Point',
-              coordinates: [long, lat]
-            },
-            properties: {
-              message: 'Hello',
-              tags: [],
-              relevance: 100,
-              user: {
-                _id: testuser._id,
-                name: testuser.name
-              }
+        }, function (err, testuser) {
+          if (err) {
+            done(err);
+            return;
+          }
+          for (var lat = -90; lat < 90; lat+=2) {
+            for (var long = -180; long < 180; long+=2) {
+              posts.insert({
+                type: 'Feature',
+                geometry : {
+                  type: 'Point',
+                  coordinates: [long, lat]
+                },
+                properties: {
+                  message: 'Hello',
+                  tags: [],
+                  relevance: 100,
+                  user: {
+                    _id: testuser._id,
+                    name: testuser.name
+                  }
+                }
+              });
             }
-          });
-        }
-      }
-      done();
+          }
+          done();
+        });
+      });
     });
   });
 
