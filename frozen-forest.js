@@ -62,6 +62,7 @@ app.listen(port, function () {
 });
 
 var runOptions;
-exports = function(options){
+module.exports = {};
+module.exports.runOptions = function(options){
   runOptions = options;
 }
