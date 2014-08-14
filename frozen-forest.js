@@ -1,13 +1,13 @@
-var db = require('./database');
+var db = require(__dirname+'/database');
 var express = require('express');
 var compression = require('compression');
 var bodyParser = require('body-parser');
 var logfmt = require('logfmt');
-var validator = require('./data-validator');
+var validator = require(__dirname+'/data-validator');
 var swagger = require('swagger-node-express');
-var auth = require('./routes/auth');
+var auth = require(__dirname+'/routes/auth');
 
-var posts = require('./routes/posts');
+var posts = require(__dirname+'/routes/posts');
 var cors = require('cors');
 
 var app = express();

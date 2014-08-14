@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
-var db = require('../database');
+var db = require(__dirname+'/../database');
 var users = db.get('users');
 var posts = db.get('posts');
-var app = require('../frozen-forest');
+var app = require(__dirname+'/../frozen-forest');
 
 app.ready = function() {
   before(function (done) {

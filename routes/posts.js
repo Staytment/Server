@@ -1,6 +1,6 @@
-var db = require('../database.js');
+var db = require(__dirname+'/../database.js');
 var posts = db.get('posts');
-var config = require('../config.json');
+var config = require(__dirname+'/../config.json');
 var swagger = require('swagger-node-express');
 var errors = swagger.errors;
 
