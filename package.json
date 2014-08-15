@@ -4,7 +4,8 @@
   "description": "Serverside API for Staytment",
   "main": "frozen-forest.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -R spec",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,9 @@
     "node-uuid": "~1.4.1",
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
-    "supertest": "~0.12.1"
+    "supertest": "~0.12.1",
+    "coveralls": "~2.11.1",
+    "mocha-lcov-reporter": "0.0.1"
   },
   "engines": {
     "node": "0.10.x"
