@@ -3,4 +3,4 @@ node_js:
  - "0.10"
 services:
  - mongodb
-after_script: npm run coveralls
+after_script: istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls
