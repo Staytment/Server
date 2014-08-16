@@ -13,14 +13,14 @@ app.runOptions({
         email: 'test@localhost',
         name: 'testuser',
         apiKey: 'thetestuserapikey'
-      }, function(){
+      }, function() {
         users.insert({
           provider: 'localhost',
           identifier: '1338',
           email: 'someone@localhost',
           name: 'someone else',
           apiKey: 'theotheruserapikey'
-        }, function(){
+        }, function() {
           users.insert({
             provider: 'localhost',
             identifier: '1339',
