@@ -2,7 +2,7 @@
   "name": "frozen-forest",
   "version": "0.1.5",
   "description": "Serverside API for Staytment",
-  "main": "frozen-forest.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha -R spec",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls"
