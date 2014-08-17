@@ -18,7 +18,7 @@ var insertPost = function (val) {
 
 
 before(function (done) {
-  this.timeout(10000);
+  this.timeout(100000);
 
   insertUser({
     provider: 'localhost',
@@ -47,8 +47,8 @@ before(function (done) {
     })
     .then(function (testuser) {
       var insertPostPromises = [];
-      for (var lat = -90; lat < 90; lat += 2) {
-        for (var long = -180; long < 180; long += 2) {
+      for (var lat = -90; lat < 90; lat += 1) {
+        for (var long = -180; long < 180; long += 1) {
           var promise = insertPost({
             type: 'Feature',
             geometry: {
