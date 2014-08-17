@@ -42,7 +42,7 @@ passport.use(new GoogleStrategy({
           .update(uuid())
           .update(profile.id)
           .digest('hex');
-        var user = {
+        user = {
           provider: 'google',
           identifier: profile.id,
           email: profile._json.email,
@@ -69,7 +69,7 @@ passport.use(new FacebookStrategy({
           .update(uuid())
           .update(profile.id)
           .digest('hex');
-        var user = {
+        user = {
           provider: 'facebook',
           identifier: profile.id,
           email: profile._json.email,

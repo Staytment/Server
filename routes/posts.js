@@ -20,7 +20,7 @@ exports.getPostList = {
   },
   action: function (req, res) {
     var limit = req.param('limit');
-    if (limit != undefined) {
+    if (limit !== undefined) {
       req.assert('limit').isInt();
       req.sanitize('limit').toInt();
       if (req.validationErrors()) {
@@ -104,7 +104,7 @@ exports.getPost = {
     posts.findOne({_id: req.param('postId')}, {fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
-        return
+        return;
       }
       res.json(doc);
     });
@@ -155,7 +155,7 @@ exports.createPost = {
     }
     if (req.param('coordinates').length != 2) {
       errors.invalid('coordinates', res);
-      return
+      return;
     }
     var post = {
       type: 'Feature',
@@ -204,11 +204,11 @@ exports.deletePost = {
     posts.findOne({_id: req.param('postId')}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
-        return
+        return;
       }
       if (!doc.properties.user._id.equals(req.user._id)) {
         errors.forbidden(res);
-        return
+        return;
       }
       posts.findAndModify({_id: req.param('postId'), 'properties.user._id': req.user._id}, {}, {remove: true}, function (err, doc) {
         res.send(err || 204);

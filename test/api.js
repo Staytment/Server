@@ -34,13 +34,13 @@ describe('API', function () {
     });
     it('should redirect /auth/google to Google oAuth2', function (done) {
       request.get('/auth/google').expect(302, function (err, res) {
-        expect(res.header['location']).to.match(/^https:\/\/accounts.google.com\/o\/oauth2\/auth/);
+        expect(res.header.location).to.match(/^https:\/\/accounts.google.com\/o\/oauth2\/auth/);
         done(err);
       });
     });
     it('should redirect /auth/facebook to Facebook oAuth2', function (done) {
       request.get('/auth/facebook').expect(302, function (err, res) {
-        expect(res.header['location']).to.match(/^https:\/\/www.facebook.com\/dialog\/oauth/);
+        expect(res.header.location).to.match(/^https:\/\/www.facebook.com\/dialog\/oauth/);
         done(err);
       });
     });
@@ -146,7 +146,7 @@ describe('API', function () {
           request.post('/posts/?apiKey=thetestuserapikey').send({
             coordinates: [13, 37, 42],
             message: 'Testmessage'
-          }).expect(400, done)
+          }).expect(400, done);
         });
         it('should return 400 BAD REQUEST with missing parameter "message"', function (done) {
           request.post('/posts/?apiKey=thetestuserapikey').send({
