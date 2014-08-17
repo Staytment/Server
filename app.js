@@ -10,6 +10,10 @@ var auth = require(__dirname+'/routes/auth');
 var posts = require(__dirname+'/routes/posts');
 var cors = require('cors');
 
+// ensure db index
+db.get('posts').ensureIndex({geometry: '2dsphere'});
+db.get('users').ensureIndex({apiKey: 1});
+
 var app = express();
 app.use(cors());
 app.use(logfmt.requestLogger());
