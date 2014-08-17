@@ -1,9 +1,11 @@
 var expect = require('chai').expect;
+var logfmt = require('logfmt');
 var db = require(__dirname + '/../database');
 var users = db.get('users');
 var posts = db.get('posts');
 var app = require(__dirname + '/../app');
 
+logfmt.stream = {write: function(){}};
 
 before(function (done) {
   users.insert({
