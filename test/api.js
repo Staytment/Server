@@ -1,3 +1,4 @@
+/*jshint expr: true*/
 var expect = require('chai').expect;
 var request = require('supertest')('http://localhost:5001');
 var db = require(__dirname+'/../database');
