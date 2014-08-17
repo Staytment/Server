@@ -24,16 +24,18 @@ Install NodeJS dependencies:
 
     npm install
   
-Run it:
+To be able to run the tests, install the following tools globaly:
+
+    sudo npm install -g mocha istanbul jshint
+    
+And then run the tests:
+
+    npm test
+  
+To run the server and play with it, execute:
 
     node ./frozen-forest.js
-  
-In a second window, you might want to run the unittests to see if everything is working as expected. Install mocha with
-npm first, but globally with the `-g` option, then, run it:
-
-    sudo npm install -g mocha
-    mocha -R spec
-  
+    
 Updating
 ========
 
