@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var request = require('supertest')('http://localhost:5000');
+var request = require('supertest')('http://localhost:5001');
 var db = require(__dirname+'/../database');
 var users = db.get('users');
 var posts = db.get('posts');
