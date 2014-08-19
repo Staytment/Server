@@ -91,20 +91,7 @@ describe('API', function () {
         });
       });
       it('should only return posts within a specified area', function (done) {
-        request.get('/posts/').send({
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [8, 45],
-                [8, 55],
-                [10, 55],
-                [10, 45],
-                [8, 45]
-              ]
-            ]
-          }
-        }).expect(200, function (err, res) {
+        request.get('/posts/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
           if (err) {
             done(err);
           }
@@ -118,54 +105,8 @@ describe('API', function () {
           done();
         });
       });
-      it('should not accept rectangles where the last coordinate is unequal with the first coordinate', function(done) {
-        request.get('/posts/').send({
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [8, 45],
-                [8, 55],
-                [10, 55],
-                [9, 50],
-                [10, 45],
-                [8, 46]
-              ]
-            ]
-          }
-        }).expect(400, done);
-      });
-      it('should not allow 6 coordinates', function (done) {
-        request.get('/posts/').send({
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [8, 45],
-                [8, 55],
-                [10, 55],
-                [9, 50],
-                [10, 45],
-                [8, 45]
-              ]
-            ]
-          }
-        }).expect(400, done);
-      });
       it('should not allow 3 coordinates', function (done) {
-        request.get('/posts/').send({
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [8, 45],
-                [8, 55],
-                [10, 45],
-                [8, 45]
-              ]
-            ]
-          }
-        }).expect(400, done);
+        request.get('/posts/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55').expect(400, done);
       });
       it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
         request.get('/posts/?limit=26').expect(400, done);
