@@ -108,6 +108,24 @@ describe('API', function () {
       it('should not allow 3 coordinates', function (done) {
         request.get('/posts/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55').expect(400, done);
       });
+      it('should only return posts within distance X to a specified point', function (done) {
+        request.get('/posts/?filter=point&long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
+          var posts = res.body.features;
+          for (var i = 0; i < posts.length; i++) {
+            expect(posts[i].geometry.coordinates[0]).to.be.at.least(19);
+            expect(posts[i].geometry.coordinates[0]).to.be.at.most(21);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.least(39);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.most(41);
+          }
+          done();
+        });
+      });
+      it('should require a distance when filtering from a specified point', function (done) {
+        request.get('/posts/?filter=point&long=20&lat=40').expect(400, done);
+      });
       it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
         request.get('/posts/?limit=26').expect(400, done);
       });

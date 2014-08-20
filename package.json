@@ -4,7 +4,7 @@
   "description": "Serverside API for Staytment",
   "main": "app.js",
   "scripts": {
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && jshint `find -iname '*.js' -not -path './node_modules/*' -not -path './coverage/*'`",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec && jshint `find -iname '*.js' -not -path './node_modules/*' -not -path './coverage/*'`",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {

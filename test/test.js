@@ -19,6 +19,9 @@ var insertPost = function (val) {
 
 before(function (done) {
   this.timeout(100000);
+  // database cleanup
+  users.remove();
+  posts.remove();
 
   insertUser({
     provider: 'localhost',
@@ -82,17 +85,5 @@ before(function (done) {
 });
 
 after(function (done) {
-  users.findOne({apiKey: 'thetestuserapikey'}, function (err, testuser) {
-    posts.remove({user: testuser._id});
-    users.remove(testuser);
-    users.findOne({apiKey: 'theotheruserapikey'}, function (err, testuser) {
-      posts.remove({user: testuser._id});
-      users.remove(testuser);
-      users.findOne({apiKey: 'yetanotherkey'}, function (err, testuser) {
-        posts.remove({user: testuser._id});
-        users.remove(testuser);
-        done();
-      });
-    });
-  });
+  done();
 });
