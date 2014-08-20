@@ -1,6 +1,6 @@
-var db = require(__dirname+'/../database.js');
+var db = require(__dirname + '/../database.js');
 var posts = db.get('posts');
-var config = require(__dirname+'/../config.json');
+var config = require(__dirname + '/../config.json');
 var swagger = require('swagger-node-express');
 var errors = swagger.errors;
 
@@ -13,7 +13,20 @@ exports.getPostList = {
     method: 'GET',
     type: 'array',
     nickname: 'getPostList',
-    parameters: [swagger.queryParam('limit', 'Limit the response to n posts. Valid range: 1-25, default 25.', 'Number')],
+    parameters: [
+      swagger.queryParam('limit', 'Limit the response to n posts. Valid range: 1-25, default 25.', 'Number'),
+      swagger.queryParam('filter', 'Method of limiting the posts by a criterion. Available values: "rectangle", "point"', 'String'),
+      swagger.queryParam('long', 'For method "point": Longitude of the point to get posts nearby', 'Number'),
+      swagger.queryParam('lat', 'For method "point": Latitude of the point to get posts nearby', 'Number'),
+      swagger.queryParam('long1', 'For method "rectangle": Longitude of the first coordinate of the rectangle', 'Number'),
+      swagger.queryParam('lat1', 'For method "rectangle": Latitude of the first coordinate of the rectangle', 'Number'),
+      swagger.queryParam('long2', 'For method "rectangle": Longitude of the second coordinate of the rectangle', 'Number'),
+      swagger.queryParam('lat2', 'For method "rectangle": Latitude of the second coordinate of the rectangle', 'Number'),
+      swagger.queryParam('long3', 'For method "rectangle": Longitude of the third coordinate of the rectangle', 'Number'),
+      swagger.queryParam('lat3', 'For method "rectangle": Latitude of the third coordinate of the rectangle', 'Number'),
+      swagger.queryParam('long4', 'For method "rectangle": Longitude of the fourth coordinate of the rectangle', 'Number'),
+      swagger.queryParam('lat4', 'For method "rectangle": Latitude of the fourth coordinate of the rectangle', 'Number'),
+    ],
     items: {
       $ref: 'Post'
     }
@@ -34,46 +47,69 @@ exports.getPostList = {
       errors.invalid('limit', res);
       return;
     }
-    posts.find({
-//      geometry: {
-//        $geoWithin: {
-//          $geometry: {
-//            type: 'Polygon',
-//            coordinates: [
-//              [
-//                [
-//                  3.955078125,
-//                  44.99588261816546
-//                ],
-//                [
-//                  3.955078125,
-//                  54.85131525968609
-//                ],
-//                [
-//                  20.698242187499996,
-//                  54.85131525968609
-//                ],
-//                [
-//                  20.698242187499996,
-//                  44.99588261816546
-//                ],
-//                [
-//                  3.955078125,
-//                  44.99588261816546
-//                ]
-//              ]
-//            ]
-//          }
-//        }
-//        $near : {
-//          $geometry: {
-//            type : 'Point',
-//            coordinates : [3.955078125, 44.99588261816546]
-//          },
-//          $maxDistance : 1000000000
-//        }
-//      }
-    }, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
+    var criteria = {};
+    if (req.param('filter') == 'point') {
+      req.assert('long', 'not a valid longitude value').isLong();
+      req.assert('lat', 'not a valid latitude value').isLat();
+      req.assert('distance', 'not a valid distance').isInt();
+      req.sanitize('long').toFloat();
+      req.sanitize('lat').toFloat();
+      req.sanitize('distance').toInt();
+      if (req.validationErrors()) {
+        errors.invalid('coordinates', res);
+        return;
+      }
+      criteria = {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [req.param('long'), req.param('lat')]
+          },
+          $maxDistance: req.param('distance')
+        }
+      };
+    } else if (req.param('filter') == 'rectangle') {
+      req.assert('long1', 'not a valid longitude value').notEmpty().isLong();
+      req.assert('lat1', 'not a valid latitude value').notEmpty().isLat();
+      req.assert('long2', 'not a valid longitude value').notEmpty().isLong();
+      req.assert('lat2', 'not a valid latitude value').notEmpty().isLat();
+      req.assert('long3', 'not a valid longitude value').notEmpty().isLong();
+      req.assert('lat3', 'not a valid latitude value').notEmpty().isLat();
+      req.assert('long4', 'not a valid longitude value').notEmpty().isLong();
+      req.assert('lat4', 'not a valid latitude value').notEmpty().isLat();
+      req.sanitize('long1').toFloat();
+      req.sanitize('lat1').toFloat();
+      req.sanitize('long2').toFloat();
+      req.sanitize('lat2').toFloat();
+      req.sanitize('long3').toFloat();
+      req.sanitize('lat3').toFloat();
+      req.sanitize('long4').toFloat();
+      req.sanitize('lat4').toFloat();
+      if (req.validationErrors()) {
+        errors.invalid('coordinates', res);
+        return;
+      }
+
+      criteria = {
+        geometry: {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [req.param('long1'), req.param('lat1')],
+                  [req.param('long2'), req.param('lat2')],
+                  [req.param('long3'), req.param('lat3')],
+                  [req.param('long4'), req.param('lat4')],
+                  [req.param('long1'), req.param('lat1')]
+                ]
+              ]
+            }
+          }
+        }
+      };
+    }
+    posts.find(criteria, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
@@ -159,7 +195,7 @@ exports.createPost = {
     }
     var post = {
       type: 'Feature',
-      geometry : {
+      geometry: {
         type: 'Point',
         coordinates: req.param('coordinates')
       },

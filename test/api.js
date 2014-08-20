@@ -97,10 +97,10 @@ describe('API', function () {
           }
           var posts = res.body.features;
           for (var i = 0; i < posts.length; i++) {
-            expect(posts[i].geometry.coordinates[0]).to.be.at.least(8);
-            expect(posts[i].geometry.coordinates[0]).to.be.at.most(10);
-            expect(posts[i].geometry.coordinates[1]).to.be.at.least(45);
-            expect(posts[i].geometry.coordinates[1]).to.be.at.most(55);
+            expect(posts[i].geometry.coordinates[0]).to.be.at.least(7.9);
+            expect(posts[i].geometry.coordinates[0]).to.be.at.most(10.1);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.least(44.9);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.most(55.1);
           }
           done();
         });
