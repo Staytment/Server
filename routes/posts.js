@@ -61,12 +61,14 @@ exports.getPostList = {
         return;
       }
       criteria = {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [req.param('long'), req.param('lat')]
-          },
-          $maxDistance: req.param('distance')
+        geometry: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [req.param('long'), req.param('lat')]
+            },
+            $maxDistance: req.param('distance')
+          }
         }
       };
     } else if (req.param('filter') == 'rectangle') {
