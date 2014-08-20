@@ -18,6 +18,7 @@ exports.getPostList = {
       swagger.queryParam('filter', 'Method of limiting the posts by a criterion. Available values: "rectangle", "point"', 'String'),
       swagger.queryParam('long', 'For method "point": Longitude of the point to get posts nearby', 'Number'),
       swagger.queryParam('lat', 'For method "point": Latitude of the point to get posts nearby', 'Number'),
+      swagger.queryParam('distance', 'For method "point": Maximum distance from given point', 'Number'),
       swagger.queryParam('long1', 'For method "rectangle": Longitude of the first coordinate of the rectangle', 'Number'),
       swagger.queryParam('lat1', 'For method "rectangle": Latitude of the first coordinate of the rectangle', 'Number'),
       swagger.queryParam('long2', 'For method "rectangle": Longitude of the second coordinate of the rectangle', 'Number'),
