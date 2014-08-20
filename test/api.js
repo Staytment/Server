@@ -1,7 +1,7 @@
 /*jshint expr: true*/
 var expect = require('chai').expect;
 var request = require('supertest')('http://localhost:5001');
-var db = require(__dirname+'/../database');
+var db = require(__dirname + '/../database');
 var users = db.get('users');
 var posts = db.get('posts');
 
@@ -53,22 +53,22 @@ describe('API', function () {
       });
       it('should not return more than 25 posts', function (done) {
         request.get('/posts/').expect(200, function (err, res) {
-          var posts = res.body;
-          expect(posts.features.length).to.be.lessThan(26);
+          var posts = res.body.features;
+          expect(posts.length).to.be.lessThan(26);
           done(err);
         });
       });
       it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
         request.get('/posts/?limit=10').expect(200, function (err, res) {
-          var posts = res.body;
-          expect(posts.features.length).to.be.lessThan(11);
+          var posts = res.body.features;
+          expect(posts.length).to.be.lessThan(11);
           done(err);
         });
       });
       it('should return posts with a coordinate pair', function (done) {
         request.get('/posts/').expect(200, function (err, res) {
-          var posts = res.body;
-          var post = posts.features[0];
+          var posts = res.body.features;
+          var post = posts[0];
           expect(post.geometry.coordinates.length).to.equal(2);
           done(err);
         });
@@ -83,12 +83,30 @@ describe('API', function () {
       });
       it('should return posts with a username and an id', function (done) {
         request.get('/posts/').expect(200, function (err, res) {
-          var posts = res.body;
-          var post = posts.features[0];
+          var posts = res.body.features;
+          var post = posts[0];
           expect(post.properties.user._id).to.exist;
           expect(post.properties.user.name).to.exist;
           done(err);
         });
+      });
+      it('should only return posts within a specified area', function (done) {
+        request.get('/posts/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
+          var posts = res.body.features;
+          for (var i = 0; i < posts.length; i++) {
+            expect(posts[i].geometry.coordinates[0]).to.be.at.least(7.9);
+            expect(posts[i].geometry.coordinates[0]).to.be.at.most(10.1);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.least(44.9);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.most(55.1);
+          }
+          done();
+        });
+      });
+      it('should not allow 3 coordinates', function (done) {
+        request.get('/posts/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55').expect(400, done);
       });
       it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
         request.get('/posts/?limit=26').expect(400, done);
