@@ -121,7 +121,7 @@ describe('API', function () {
             expect(posts[i].geometry.coordinates[1]).to.be.at.most(41);
           }
           done();
-        })
+        });
       });
       it('should require a distance when filtering from a specified point', function (done) {
         request.get('/posts/?filter=point&long=20&lat=40').expect(400, done);
