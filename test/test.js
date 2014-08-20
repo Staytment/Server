@@ -83,13 +83,13 @@ before(function (done) {
 
 after(function (done) {
   users.findOne({apiKey: 'thetestuserapikey'}, function (err, testuser) {
-    posts.remove({user: testuser._id});
+    posts.remove({'properties.user._id': testuser._id});
     users.remove(testuser);
     users.findOne({apiKey: 'theotheruserapikey'}, function (err, testuser) {
-      posts.remove({user: testuser._id});
+      posts.remove({'properties.user._id': testuser._id});
       users.remove(testuser);
       users.findOne({apiKey: 'yetanotherkey'}, function (err, testuser) {
-        posts.remove({user: testuser._id});
+        posts.remove({'properties.user._id': testuser._id});
         users.remove(testuser);
         done();
       });
