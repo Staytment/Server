@@ -112,7 +112,16 @@ exports.getPostList = {
         }
       };
     }
-    posts.find(criteria, {limit: limit, fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, docs) {
+    posts.find(criteria, {
+      limit: limit,
+      sort: { _id: -1 },
+      fields: {
+        geometry: 1,
+        properties: 1,
+        type: 1,
+        _id: 1
+      },
+    }, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
