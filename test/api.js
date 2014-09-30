@@ -434,7 +434,7 @@ describe('API', function () {
         });
       });
       it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
-        request.get('/posts/by-point/?long=20&lat=40&distance=100000?limit=10').expect(200, function (err, res) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=10').expect(200, function (err, res) {
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(11);
           done(err);
