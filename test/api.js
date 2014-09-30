@@ -338,7 +338,7 @@ describe('API', function () {
         request.get('/posts/by-rectangle/').expect(400, done);
       });
       it('should return 200 OK', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, done)
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, done);
       });
       it('should not return more than 25 posts', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
@@ -415,7 +415,7 @@ describe('API', function () {
       it('should return 400 BAD REQUEST if parameter "limit" is a text with special characters', function (done) {
         request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=äöüß').expect(400, done);
       });
-    })
+    });
   });
   describe('/posts/by-point', function () {
     describe('HTTP GET', function () {
@@ -502,5 +502,5 @@ describe('API', function () {
         request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=äöüß').expect(400, done);
       });
     });
-  })
+  });
 });
