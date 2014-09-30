@@ -332,4 +332,175 @@ describe('API', function () {
       });
     });
   });
+  describe('/posts/by-rectangle', function () {
+    describe('HTTP GET', function () {
+      it('should return 400 BAD REQUEST without parameters', function (done) {
+        request.get('/posts/by-rectangle/').expect(400, done);
+      });
+      it('should return 200 OK', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, done)
+      });
+      it('should not return more than 25 posts', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+          var posts = res.body.features;
+          expect(posts.length).to.be.lessThan(26);
+          done(err);
+        });
+      });
+      it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45&limit=10').expect(200, function (err, res) {
+          var posts = res.body.features;
+          expect(posts.length).to.be.lessThan(11);
+          done(err);
+        });
+      });
+      it('should return posts with a coordinate pair', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+          var posts = res.body.features;
+          var post = posts[0];
+          expect(post.geometry.coordinates.length).to.equal(2);
+          done(err);
+        });
+      });
+      it('should return posts with a message text', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+          var posts = res.body;
+          var post = posts.features[0];
+          expect(post.properties.message).to.exist;
+          done(err);
+        });
+      });
+      it('should return posts with a username and an id', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+          var posts = res.body.features;
+          var post = posts[0];
+          expect(post.properties.user._id).to.exist;
+          expect(post.properties.user.name).to.exist;
+          done(err);
+        });
+      });
+      it('should only return posts within a specified area', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
+          var posts = res.body.features;
+          for (var i = 0; i < posts.length; i++) {
+            expect(posts[i].geometry.coordinates[0]).to.be.at.least(7.9);
+            expect(posts[i].geometry.coordinates[0]).to.be.at.most(10.1);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.least(44.9);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.most(55.1);
+          }
+          done();
+        });
+      });
+      it('should not allow 3 coordinates', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=26').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is 0', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=0').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is negative', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=-10').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is a letter', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=a').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is a text', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=abcde').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is a text with special characters', function (done) {
+        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=äöüß').expect(400, done);
+      });
+    })
+  });
+  describe('/posts/by-point', function () {
+    describe('HTTP GET', function () {
+      it('should return 400 BAD REQUEST without parameters', function (done) {
+        request.get('/posts/by-point').expect(400, done);
+      });
+
+      it('should return 200 OK', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, done);
+      });
+      it('should not return more than 25 posts', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          var posts = res.body.features;
+          expect(posts.length).to.be.lessThan(26);
+          done(err);
+        });
+      });
+      it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000?limit=10').expect(200, function (err, res) {
+          var posts = res.body.features;
+          expect(posts.length).to.be.lessThan(11);
+          done(err);
+        });
+      });
+      it('should return posts with a coordinate pair', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          var posts = res.body.features;
+          var post = posts[0];
+          expect(post.geometry.coordinates.length).to.equal(2);
+          done(err);
+        });
+      });
+      it('should return posts with a message text', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          var posts = res.body;
+          var post = posts.features[0];
+          expect(post.properties.message).to.exist;
+          done(err);
+        });
+      });
+      it('should return posts with a username and an id', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          var posts = res.body.features;
+          var post = posts[0];
+          expect(post.properties.user._id).to.exist;
+          expect(post.properties.user.name).to.exist;
+          done(err);
+        });
+      });
+      it('should only return posts within distance X to a specified point', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
+          var posts = res.body.features;
+          for (var i = 0; i < posts.length; i++) {
+            expect(posts[i].geometry.coordinates[0]).to.be.at.least(19);
+            expect(posts[i].geometry.coordinates[0]).to.be.at.most(21);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.least(39);
+            expect(posts[i].geometry.coordinates[1]).to.be.at.most(41);
+          }
+          done();
+        });
+      });
+      it('should require a distance when filtering from a specified point', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=26').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is 0', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=0').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is negative', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=-10').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is a letter', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=a').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is a text', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=abcde').expect(400, done);
+      });
+      it('should return 400 BAD REQUEST if parameter "limit" is a text with special characters', function (done) {
+        request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=äöüß').expect(400, done);
+      });
+    });
+  })
 });
