@@ -52,6 +52,8 @@ swagger.setAppHandler(app);
 swagger.configureSwaggerPaths('', '/api-docs', '');
 
 swagger.addGet(posts.getPostList);
+swagger.addGet(posts.getPostListByRectangle);
+swagger.addGet(posts.getPostListByPoint);
 swagger.addGet(posts.getPost);
 swagger.addPost(posts.createPost);
 swagger.addDelete(posts.deletePost);

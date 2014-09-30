@@ -12,8 +12,23 @@ logfmt.stream = {write: function () {
 var insertUser = function (val) {
   return Q.ninvoke(users, 'insert', val);
 };
-var insertPost = function (val) {
-  return Q.ninvoke(posts, 'insert', val);
+var insertPost = function (user, long, lat) {
+  return Q.ninvoke(posts, 'insert', {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [long, lat]
+    },
+    properties: {
+      message: 'Hello',
+      tags: [],
+      relevance: 100,
+      user: {
+        _id: user._id,
+        name: user.name
+      }
+    }
+  });
 };
 
 
@@ -50,24 +65,18 @@ before(function (done) {
     })
     .then(function (testuser) {
       var insertPostPromises = [];
-      for (var lat = -90; lat < 90; lat += 1) {
-        for (var long = -180; long < 180; long += 1) {
-          var promise = insertPost({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [long, lat]
-            },
-            properties: {
-              message: 'Hello',
-              tags: [],
-              relevance: 100,
-              user: {
-                _id: testuser._id,
-                name: testuser.name
-              }
-            }
-          });
+      var lat;
+      var long;
+      var promise;
+      for (lat = -90; lat < 90; lat += 1) {
+        for (long = -180; long < 180; long += 1) {
+          promise = insertPost(testuser, long, lat);
+          insertPostPromises.push(promise);
+        }
+      }
+      for (lat = 47; lat < 53; lat += 0.1) {
+        for (long = 8; long < 13; long += 0.1) {
+          promise = insertPost(testuser, long, lat);
           insertPostPromises.push(promise);
         }
       }
