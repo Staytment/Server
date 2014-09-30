@@ -1,8 +1,9 @@
 var db = require(__dirname + '/../database.js');
-var posts = db.get('posts');
+var dbPosts = db.get('posts');
 var config = require(__dirname + '/../config.json');
 var swagger = require('swagger-node-express');
 var errors = swagger.errors;
+var posts = require(__dirname + '/../posts.js');
 
 exports.getPostList = {
   spec: {
@@ -112,7 +113,7 @@ exports.getPostList = {
         }
       };
     }
-    posts.find(criteria, {
+    dbPosts.find(criteria, {
       limit: limit,
       sort: { _id: -1 },
       fields: {
@@ -210,16 +211,7 @@ exports.getPostListByRectangle = {
         }
       }
     };
-    posts.find(criteria, {
-      limit: limit,
-      sort: { _id: -1 },
-      fields: {
-        geometry: 1,
-        properties: 1,
-        type: 1,
-        _id: 1
-      }
-    }, function (err, docs) {
+    posts.fetch_posts(criteria, limit, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
@@ -285,16 +277,7 @@ exports.getPostListByPoint = {
         }
       }
     };
-    posts.find(criteria, {
-      limit: limit,
-      sort: { _id: -1 },
-      fields: {
-        geometry: 1,
-        properties: 1,
-        type: 1,
-        _id: 1
-      }
-    }, function (err, docs) {
+    posts.fetch_posts(criteria, limit, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
@@ -323,7 +306,7 @@ exports.getPost = {
       errors.invalid('postId', res);
       return;
     }
-    posts.findOne({_id: req.param('postId')}, {fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, doc) {
+    dbPosts.findOne({_id: req.param('postId')}, {fields: {geometry: 1, properties: 1, type: 1, _id: 1}}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
         return;
@@ -395,7 +378,7 @@ exports.createPost = {
         }
       }
     };
-    posts.insert(post);
+    dbPosts.insert(post);
     res.json(post);
   }
 };
@@ -423,7 +406,7 @@ exports.deletePost = {
       errors.invalid('postId', res);
       return;
     }
-    posts.findOne({_id: req.param('postId')}, function (err, doc) {
+    dbPosts.findOne({_id: req.param('postId')}, function (err, doc) {
       if (!doc) {
         errors.notFound('Post', res);
         return;
@@ -432,7 +415,7 @@ exports.deletePost = {
         errors.forbidden(res);
         return;
       }
-      posts.findAndModify({_id: req.param('postId'), 'properties.user._id': req.user._id}, {}, {remove: true}, function (err, doc) {
+      dbPosts.findAndModify({_id: req.param('postId'), 'properties.user._id': req.user._id}, {}, {remove: true}, function (err, doc) {
         res.send(err || 204);
       });
     });
