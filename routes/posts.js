@@ -177,19 +177,34 @@ exports.getPostListByRectangle = {
     }
   },
   action: function (req, res) {
-    var limit = req.param('limit');
-    if (limit !== undefined) {
-      req.assert('limit').isInt();
-      req.sanitize('limit').toInt();
+    var horizontal_resolution = req.param('horizontal_resolution');
+    if (horizontal_resolution !== undefined) {
+      req.assert('horizontal_resolution').isInt();
+      req.sanitize('horizontal_resolution').toInt();
       if (req.validationErrors()) {
-        errors.invalid('limit', res);
+        errors.invalid('horizontal_resolution', res);
         return;
       }
     } else {
-      limit = 25;
+      horizontal_resolution = 25;
     }
-    if (limit < 1 || limit > 25) {
-      errors.invalid('limit', res);
+    if (horizontal_resolution < 1 || horizontal_resolution > 10) {
+      errors.invalid('horizontal_resolution', res);
+      return;
+    }
+    var vertical_resolution = req.param('vertical_resolution');
+    if (vertical_resolution !== undefined) {
+      req.assert('vertical_resolution').isInt();
+      req.sanitize('vertical_resolution').toInt();
+      if (req.validationErrors()) {
+        errors.invalid('vertical_resolution', res);
+        return;
+      }
+    } else {
+      vertical_resolution = 25;
+    }
+    if (vertical_resolution < 1 || vertical_resolution > 10) {
+      errors.invalid('vertical_resolution', res);
       return;
     }
 
@@ -197,42 +212,23 @@ exports.getPostListByRectangle = {
     req.assert('lat1', 'not a valid latitude value').notEmpty().isLat();
     req.assert('long2', 'not a valid longitude value').notEmpty().isLong();
     req.assert('lat2', 'not a valid latitude value').notEmpty().isLat();
-    req.assert('long3', 'not a valid longitude value').notEmpty().isLong();
-    req.assert('lat3', 'not a valid latitude value').notEmpty().isLat();
-    req.assert('long4', 'not a valid longitude value').notEmpty().isLong();
-    req.assert('lat4', 'not a valid latitude value').notEmpty().isLat();
     req.sanitize('long1').toFloat();
     req.sanitize('lat1').toFloat();
     req.sanitize('long2').toFloat();
     req.sanitize('lat2').toFloat();
-    req.sanitize('long3').toFloat();
-    req.sanitize('lat3').toFloat();
-    req.sanitize('long4').toFloat();
-    req.sanitize('lat4').toFloat();
     if (req.validationErrors()) {
       errors.invalid('coordinates', res);
       return;
     }
 
-    var criteria = {
-      geometry: {
-        $geoWithin: {
-          $geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [req.param('long1'), req.param('lat1')],
-                [req.param('long2'), req.param('lat2')],
-                [req.param('long3'), req.param('lat3')],
-                [req.param('long4'), req.param('lat4')],
-                [req.param('long1'), req.param('lat1')]
-              ]
-            ]
-          }
-        }
-      }
-    };
-    posts.fetch_posts_within(criteria, limit, function (err, docs) {
+    var coordinates = [
+      [req.param('long1'), req.param('lat1')],
+      [req.param('long1'), req.param('lat2')],
+      [req.param('long2'), req.param('lat2')],
+      [req.param('long2'), req.param('lat1')],
+      [req.param('long1'), req.param('lat1')]
+    ];
+    posts.fetch_posts_within(coordinates, horizontal_resolution, vertical_resolution, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
