@@ -338,24 +338,24 @@ describe('API', function () {
         request.get('/posts/by-rectangle/').expect(400, done);
       });
       it('should return 200 OK', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, done);
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, done);
       });
-      it('should not return more than 25 posts', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+      it('should not return more than 15 posts (due to resolution 3*5)', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=3&vertical_resolution=5').expect(200, function (err, res) {
           var posts = res.body.features;
-          expect(posts.length).to.be.lessThan(26);
+          expect(posts.length).to.be.lessThan(16);
           done(err);
         });
       });
-      it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45&limit=10').expect(200, function (err, res) {
+      it('should not return more than 30 posts (6*5)', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=6&vertical_resolution=5').expect(200, function (err, res) {
           var posts = res.body.features;
-          expect(posts.length).to.be.lessThan(11);
+          expect(posts.length).to.be.lessThan(16);
           done(err);
         });
       });
       it('should return posts with a coordinate pair', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
           var posts = res.body.features;
           var post = posts[0];
           expect(post.geometry.coordinates.length).to.equal(2);
@@ -363,7 +363,7 @@ describe('API', function () {
         });
       });
       it('should return posts with a message text', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
           var posts = res.body;
           var post = posts.features[0];
           expect(post.properties.message).to.exist;
@@ -371,7 +371,7 @@ describe('API', function () {
         });
       });
       it('should return posts with a username and an id', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
           var posts = res.body.features;
           var post = posts[0];
           expect(post.properties.user._id).to.exist;
@@ -380,7 +380,7 @@ describe('API', function () {
         });
       });
       it('should only return posts within a specified area', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&long4=10&lat4=45').expect(200, function (err, res) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
           if (err) {
             done(err);
           }
@@ -394,26 +394,14 @@ describe('API', function () {
           done();
         });
       });
-      it('should not allow 3 coordinates', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55').expect(400, done);
+      it('should not allow only 1 coordinate', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45').expect(400, done);
       });
-      it('should return 400 BAD REQUEST if parameter "limit" is above 25', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=26').expect(400, done);
+      it('should not allow negative vertical resolution', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&vertical_resolution=-2').expect(400, done);
       });
-      it('should return 400 BAD REQUEST if parameter "limit" is 0', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=0').expect(400, done);
-      });
-      it('should return 400 BAD REQUEST if parameter "limit" is negative', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=-10').expect(400, done);
-      });
-      it('should return 400 BAD REQUEST if parameter "limit" is a letter', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=a').expect(400, done);
-      });
-      it('should return 400 BAD REQUEST if parameter "limit" is a text', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=abcde').expect(400, done);
-      });
-      it('should return 400 BAD REQUEST if parameter "limit" is a text with special characters', function (done) {
-        request.get('/posts/by-rectangle/?filter=rectangle&long1=8&lat1=45&long2=8&lat2=55&long3=10&lat3=55&limit=äöüß').expect(400, done);
+      it('should not allow negative horizontal resolution', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=-2').expect(400, done);
       });
     });
   });
