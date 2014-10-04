@@ -211,7 +211,7 @@ exports.getPostListByRectangle = {
         }
       }
     };
-    posts.fetch_posts(criteria, limit, function (err, docs) {
+    posts.fetch_posts_within(criteria, limit, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
@@ -266,18 +266,9 @@ exports.getPostListByPoint = {
       errors.invalid('coordinates', res);
       return;
     }
-    var criteria = {
-      geometry: {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [req.param('long'), req.param('lat')]
-          },
-          $maxDistance: req.param('distance')
-        }
-      }
-    };
-    posts.fetch_posts(criteria, limit, function (err, docs) {
+    var coordinates = [req.param('long'), req.param('lat')];
+    var maxDistance = req.param('distance');
+    posts.fetch_posts_nearby(coordinates, maxDistance, limit, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs
