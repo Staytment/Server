@@ -72,5 +72,32 @@ exports.fetch_posts_nearby = function (coordinates, maxDistance, limit, callback
  * @param {Function} callback
  */
 exports.fetch_posts_within = function (coordinates, horizontal_resolution, vertical_resolution, callback) {
-
+  var rectangle = [
+    [
+      [coordinates[0][0], coordinates[0][1]],
+      [coordinates[0][0], coordinates[1][1]],
+      [coordinates[1][0], coordinates[1][1]],
+      [coordinates[1][0], coordinates[0][1]],
+      [coordinates[0][0], coordinates[0][1]]
+    ]
+  ];
+  dbPosts.find({
+    geometry: {
+      $geoWithin: {
+        $geometry: {
+          type: 'Polygon',
+          coordinates: rectangle
+        }
+      }
+    }
+  }, {
+    limit: 20,
+    sort: { _id: -1 },
+    fields: {
+      geometry: 1,
+      properties: 1,
+      type: 1,
+      _id: 1
+    }
+  }, callback);
 };

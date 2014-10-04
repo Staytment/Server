@@ -186,7 +186,7 @@ exports.getPostListByRectangle = {
         return;
       }
     } else {
-      horizontal_resolution = 25;
+      horizontal_resolution = 3;
     }
     if (horizontal_resolution < 1 || horizontal_resolution > 10) {
       errors.invalid('horizontal_resolution', res);
@@ -201,7 +201,7 @@ exports.getPostListByRectangle = {
         return;
       }
     } else {
-      vertical_resolution = 25;
+      vertical_resolution = 4;
     }
     if (vertical_resolution < 1 || vertical_resolution > 10) {
       errors.invalid('vertical_resolution', res);
@@ -226,6 +226,11 @@ exports.getPostListByRectangle = {
       [req.param('long2'), req.param('lat2')]
     ];
     posts.fetch_posts_within(coordinates, horizontal_resolution, vertical_resolution, function (err, docs) {
+      if (err) {
+        console.log(err);
+        res.send(500);
+        return;
+      }
       res.send({
         type: 'FeatureCollection',
         features: docs
