@@ -223,10 +223,7 @@ exports.getPostListByRectangle = {
 
     var coordinates = [
       [req.param('long1'), req.param('lat1')],
-      [req.param('long1'), req.param('lat2')],
-      [req.param('long2'), req.param('lat2')],
-      [req.param('long2'), req.param('lat1')],
-      [req.param('long1'), req.param('lat1')]
+      [req.param('long2'), req.param('lat2')]
     ];
     posts.fetch_posts_within(coordinates, horizontal_resolution, vertical_resolution, function (err, docs) {
       res.send({
