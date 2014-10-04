@@ -45,22 +45,26 @@ exports.fetch_posts_nearby = function (coordinates, maxDistance, limit, callback
  * Some ASCII art to demonstrate each parameter:
  *
  *         coordinates[0]
- *             X-----+-----+-----+-----+-----+
- *             |     |     |     |     |     |
- *             |     |     |     |     |     |  <--+
- *             |     |     |     |     |     |     |
- *             +-----+-----+-----+-----+-----+     |
- *             |     |     |     |     |     |     |
- *             |     |     |     |     |     |  <--+-- vertical_resolution = 3
- *             |     |     |     |     |     |     |
- *             +-----+-----+-----+-----+-----+     |
- *             |     |     |     |     |     |     |
- *             |     |     |     |     |     |  <--+
- *             |     |     |     |     |     |
- *             +-----+-----+-----+-----+-----X
- *                                       coordinates[1]
- *                ^     ^     ^     ^     ^
- *                |-----|-----|-----|-----|---- horizontal_resolution = 5
+ *             X---------+---------+---------+
+ *             |         |         |         |
+ *             |         |         |         |  <--+
+ *             |         |         |         |     |
+ *             +---------+---------+---------+     |
+ *             |         |         |         |     |
+ *             |         |         |         |  <--+
+ *             |         |         |         |     |
+ *             +---------+---------+---------+     +-- vertical_resolution = 4
+ *             |         |         |         |     |
+ *             |         |         |         |  <--+
+ *             |         |         |         |     |
+ *             +---------+---------+---------+     |
+ *             |         |         |         |     |
+ *             |         |         |         |  <--+
+ *             |         |         |         |
+ *             +---------+---------+---------X
+ *                                     coordinates[1]
+ *                  ^         ^         ^
+ *                  |---------|---------|---- horizontal_resolution = 3
  *
  * @param {Number[][]} coordinates
  * @param {Number} horizontal_resolution - Number of posts which should be returned for each row

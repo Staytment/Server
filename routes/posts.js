@@ -135,21 +135,42 @@ exports.getPostListByRectangle = {
   spec: {
     description: 'Fetch a list of posts by rectangle',
     path: '/posts/by-rectangle',
-    notes: 'Returns a list of posts.',
+    notes: 'The rectangle will be separated into a grid. For each grid cell, you will receive one post.\
+            The default grid size is 3*4 (as seen in the graphic below)\
+      <pre>\
+      long1, lat1                                                         \n\
+          X---------+---------+---------+                                 \n\
+          |         |         |         |                                 \n\
+          |         |         |         |  <--+                           \n\
+          |         |         |         |     |                           \n\
+          +---------+---------+---------+     |                           \n\
+          |         |         |         |     |                           \n\
+          |         |         |         |  <--+                           \n\
+          |         |         |         |     |                           \n\
+          +---------+---------+---------+     +-- vertical_resolution = 4 \n\
+          |         |         |         |     |                           \n\
+          |         |         |         |  <--+                           \n\
+          |         |         |         |     |                           \n\
+          +---------+---------+---------+     |                           \n\
+          |         |         |         |     |                           \n\
+          |         |         |         |  <--+                           \n\
+          |         |         |         |                                 \n\
+          +---------+---------+---------X                                 \n\
+                                       long2, lat2                        \n\
+               ^         ^         ^                                      \n\
+               |---------|---------|---- horizontal_resolution = 3        \n\
+      </pre>',
     summary: 'Fetch a list of posts by rectangle',
     method: 'GET',
     type: 'array',
     nickname: 'getPostList',
     parameters: [
-      swagger.queryParam('limit', 'Limit the response to n posts. Valid range: 1-25, default 25.', 'Number'),
       swagger.queryParam('long1', 'Longitude of the first coordinate of the rectangle', 'Number'),
       swagger.queryParam('lat1', 'Latitude of the first coordinate of the rectangle', 'Number'),
       swagger.queryParam('long2', 'Longitude of the second coordinate of the rectangle', 'Number'),
       swagger.queryParam('lat2', 'Latitude of the second coordinate of the rectangle', 'Number'),
-      swagger.queryParam('long3', 'Longitude of the third coordinate of the rectangle', 'Number'),
-      swagger.queryParam('lat3', 'Latitude of the third coordinate of the rectangle', 'Number'),
-      swagger.queryParam('long4', 'Longitude of the fourth coordinate of the rectangle', 'Number'),
-      swagger.queryParam('lat4', 'Latitude of the fourth coordinate of the rectangle', 'Number')
+      swagger.queryParam('horizontal_resolution', 'Horizontal resolution of the grid', 'Number'),
+      swagger.queryParam('vertical_resolution', 'Vertical resolution of the grid', 'Number')
     ],
     items: {
       $ref: 'Post'
