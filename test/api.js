@@ -40,8 +40,11 @@ describe('API', function () {
     });
     it('should redirect /auth/facebook to Facebook oAuth2', function (done) {
       request.get('/auth/facebook').expect(302, function (err, res) {
+        if (err) {
+          done(err);
+        }
         expect(res.header.location).to.match(/^https:\/\/www.facebook.com\/dialog\/oauth/);
-        done(err);
+        done();
       });
     });
   });
@@ -53,16 +56,22 @@ describe('API', function () {
       });
       it('should not return more than 25 posts', function (done) {
         request.get('/posts/').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(26);
-          done(err);
+          done();
         });
       });
       it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
         request.get('/posts/?limit=10').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(11);
-          done(err);
+          done();
         });
       });
       it('should return posts with a coordinate pair', function (done) {
@@ -160,6 +169,9 @@ describe('API', function () {
             coordinates: [13, 37],
             message: 'Testmessage'
           }).expect(200, function (err, res) {
+            if (err) {
+              done(err);
+            }
             var post = res.body;
             expect(post.type).to.equal('Feature');
             expect(post.properties.message).to.equal('Testmessage');
@@ -169,7 +181,7 @@ describe('API', function () {
             expect(post.geometry.type).to.equal('Point');
             expect(post.geometry.coordinates).to.eql([13, 37]);
 
-            done(err);
+            done();
           });
         });
         it('should return 400 BAD REQUEST with one coordinate', function (done) {
@@ -241,22 +253,27 @@ describe('API', function () {
       }).end(function (err, res) {
         if (err) {
           done(err);
-        } else {
-          my_post_id = res.body._id;
-          request.post('/posts/?apiKey=theotheruserapikey').send({
-            coordinates: [11, 47],
-            message: 'Testmessage'
-          }).end(function (err, res) {
-            other_post_id = res.body._id;
-            done(err);
-          });
         }
+        my_post_id = res.body._id;
+        request.post('/posts/?apiKey=theotheruserapikey').send({
+          coordinates: [11, 47],
+          message: 'Testmessage'
+        }).end(function (err, res) {
+          if (err) {
+            done(err);
+          }
+          other_post_id = res.body._id;
+          done();
+        });
       });
     });
 
     describe('HTTP GET', function () {
       it('should return 200 OK and the correct post', function (done) {
         request.get('/posts/' + other_post_id).expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var post = res.body;
           expect(post.properties.message).to.equal('Testmessage');
           expect(post.properties.user._id).to.equal(otheruser._id.toString());
@@ -265,7 +282,7 @@ describe('API', function () {
           expect(post.geometry.type).to.equal('Point');
           expect(post.geometry.coordinates).to.eql([11, 47]);
 
-          done(err);
+          done();
         });
       });
       it('should return 404 NOT FOUND with an unkown post id', function (done) {
@@ -342,41 +359,56 @@ describe('API', function () {
       });
       it('should not return more than 15 posts (due to resolution 3*5)', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=3&vertical_resolution=5').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(16);
-          done(err);
+          done();
         });
       });
       it('should not return more than 30 posts (6*5)', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=6&vertical_resolution=5').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(16);
-          done(err);
+          done();
         });
       });
       it('should return posts with a coordinate pair', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           var post = posts[0];
           expect(post.geometry.coordinates.length).to.equal(2);
-          done(err);
+          done();
         });
       });
       it('should return posts with a message text', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body;
           var post = posts.features[0];
           expect(post.properties.message).to.exist;
-          done(err);
+          done();
         });
       });
       it('should return posts with a username and an id', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           var post = posts[0];
           expect(post.properties.user._id).to.exist;
           expect(post.properties.user.name).to.exist;
-          done(err);
+          done();
         });
       });
       it('should only return posts within a specified area', function (done) {
@@ -422,41 +454,56 @@ describe('API', function () {
       });
       it('should not return more than 25 posts', function (done) {
         request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(26);
-          done(err);
+          done();
         });
       });
       it('should not return more than 10 posts if parameter "limit=10" is passed', function (done) {
         request.get('/posts/by-point/?long=20&lat=40&distance=100000&limit=10').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           expect(posts.length).to.be.lessThan(11);
-          done(err);
+          done();
         });
       });
       it('should return posts with a coordinate pair', function (done) {
         request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           var post = posts[0];
           expect(post.geometry.coordinates.length).to.equal(2);
-          done(err);
+          done();
         });
       });
       it('should return posts with a message text', function (done) {
         request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body;
           var post = posts.features[0];
           expect(post.properties.message).to.exist;
-          done(err);
+          done();
         });
       });
       it('should return posts with a username and an id', function (done) {
         request.get('/posts/by-point/?long=20&lat=40&distance=100000').expect(200, function (err, res) {
+          if (err) {
+            done(err);
+          }
           var posts = res.body.features;
           var post = posts[0];
           expect(post.properties.user._id).to.exist;
           expect(post.properties.user.name).to.exist;
-          done(err);
+          done();
         });
       });
       it('should only return posts within distance X to a specified point', function (done) {
