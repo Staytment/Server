@@ -40,16 +40,21 @@ exports.fetch_posts_nearby = function (coordinates, maxDistance, limit, callback
  *   [51, 9,5]
  * ]
  *
+ * The parameters horizontal_resolution and vertical_resolution define the grid. Only the most relevant post within
+ * each grid cell will be returned.
  * Some ASCII art to demonstrate each parameter:
  *
  *         coordinates[0]
- *             X-----------------------------+
+ *             X-----+-----+-----+-----+-----+
  *             |     |     |     |     |     |
  *             |     |     |     |     |     |  <--+
+ *             |     |     |     |     |     |     |
  *             +-----+-----+-----+-----+-----+     |
+ *             |     |     |     |     |     |     |
  *             |     |     |     |     |     |  <--+-- vertical_resolution = 3
  *             |     |     |     |     |     |     |
  *             +-----+-----+-----+-----+-----+     |
+ *             |     |     |     |     |     |     |
  *             |     |     |     |     |     |  <--+
  *             |     |     |     |     |     |
  *             +-----+-----+-----+-----+-----X
