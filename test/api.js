@@ -397,11 +397,17 @@ describe('API', function () {
       it('should not allow only 1 coordinate', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45').expect(400, done);
       });
+      it('should not allow negative horizontal resolution', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=-2').expect(400, done);
+      });
       it('should not allow negative vertical resolution', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&vertical_resolution=-2').expect(400, done);
       });
-      it('should not allow negative horizontal resolution', function (done) {
-        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=-2').expect(400, done);
+      it('should not allow horizontal resolution > 10', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&horizontal_resolution=11').expect(400, done);
+      });
+      it('should not allow vertical resolution > 10', function (done) {
+        request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&vertical_resolution=11').expect(400, done);
       });
     });
   });
