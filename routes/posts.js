@@ -3,7 +3,7 @@ var dbPosts = db.get('posts');
 var config = require(__dirname + '/../config.json');
 var swagger = require('swagger-node-express');
 var errors = swagger.errors;
-var posts = require(__dirname + '/../posts.js');
+var posts = require(__dirname + '/../controllers/posts.js');
 
 exports.getPostList = {
   spec: {

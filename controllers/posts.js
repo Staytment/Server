@@ -1,4 +1,4 @@
-var db = require(__dirname + '/database.js');
+var db = require(__dirname + '/../database.js');
 var dbPosts = db.get('posts');
 
 /**
