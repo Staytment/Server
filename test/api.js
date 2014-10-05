@@ -6,6 +6,7 @@ var users = db.get('users');
 var posts = db.get('posts');
 
 describe('API', function () {
+  this.timeout(10000);
   var testuser;
   var otheruser;
   before(function () {
