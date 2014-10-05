@@ -225,7 +225,7 @@ exports.getPostListByRectangle = {
       [req.param('long1'), req.param('lat1')],
       [req.param('long2'), req.param('lat2')]
     ];
-    posts.fetch_posts_within(coordinates, horizontal_resolution, vertical_resolution, function (err, docs) {
+    posts.FetchPostsWithin(coordinates, horizontal_resolution, vertical_resolution, function (err, docs) {
       if (err) {
         console.log(err);
         res.send(500);
@@ -287,7 +287,7 @@ exports.getPostListByPoint = {
     }
     var coordinates = [req.param('long'), req.param('lat')];
     var maxDistance = req.param('distance');
-    posts.fetch_posts_nearby(coordinates, maxDistance, limit, function (err, docs) {
+    posts.fetchPostsNearby(coordinates, maxDistance, limit, function (err, docs) {
       res.send({
         type: 'FeatureCollection',
         features: docs

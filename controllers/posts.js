@@ -8,7 +8,7 @@ var dbPosts = db.get('posts');
  * @param {Number} limit - Maximum number of posts that should be returned
  * @param {Function} callback
  */
-exports.fetch_posts_nearby = function (coordinates, maxDistance, limit, callback) {
+exports.fetchPostsNearby = function (coordinates, maxDistance, limit, callback) {
   dbPosts.find({
     geometry: {
       $near: {
@@ -71,7 +71,7 @@ exports.fetch_posts_nearby = function (coordinates, maxDistance, limit, callback
  * @param {Number} vertical_resolution - Number of posts which should be returned for each column
  * @param {Function} callback
  */
-exports.fetch_posts_within = function (coordinates, horizontal_resolution, vertical_resolution, callback) {
+exports.FetchPostsWithin = function (coordinates, horizontal_resolution, vertical_resolution, callback) {
   var rectangle = [
     [
       [coordinates[0][0], coordinates[0][1]],
