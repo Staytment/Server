@@ -138,7 +138,9 @@ exports.FetchPostsWithin = function (coordinates, horizontal_resolution, vertica
       var docs = [];
       for (var promise in promises) {
         var doc = promises[promise][0];
-        docs.push(doc);
+        if (doc) {
+          docs.push(doc);
+        }
       }
       callback(null, docs);
     });
