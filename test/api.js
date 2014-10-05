@@ -441,6 +441,18 @@ describe('API', function () {
       it('should not allow vertical resolution > 10', function (done) {
         request.get('/posts/by-rectangle/?long1=8&lat1=45&long2=10&lat2=55&vertical_resolution=11').expect(400, done);
       });
+      it('should not return "null" instead of a GeoJSON object', function (done) {
+        request.get('/posts/by-rectangle/?long1=14&lat1=52&long2=17&lat2=51').expect(200, function(err, res) {
+          if (err) {
+            done(err);
+          }
+          var posts = res.body.features;
+          for (var i = 0; i < posts.length; i++) {
+            expect(posts[i]).to.exist;
+          }
+          done();
+        });
+      });
     });
   });
   describe('/posts/by-point', function () {
