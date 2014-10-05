@@ -136,7 +136,7 @@ exports.FetchPostsWithin = function (coordinates, horizontal_resolution, vertica
   Q.all(promises)
     .then(function () {
       var docs = [];
-      for (promise in promises) {
+      for (var promise in promises) {
         var doc = promises[promise][0];
         docs.push(doc);
       }

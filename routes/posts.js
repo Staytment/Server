@@ -135,31 +135,31 @@ exports.getPostListByRectangle = {
   spec: {
     description: 'Fetch a list of posts by rectangle',
     path: '/posts/by-rectangle',
-    notes: 'The rectangle will be separated into a grid. For each grid cell, you will receive one post.\
-            The default grid size is 3*4 (as seen in the graphic below)\
-      <pre>\
-      long1, lat1                                                         \n\
-          X---------+---------+---------+                                 \n\
-          |         |         |         |                                 \n\
-          |         |         |         |  <--+                           \n\
-          |         |         |         |     |                           \n\
-          +---------+---------+---------+     |                           \n\
-          |         |         |         |     |                           \n\
-          |         |         |         |  <--+                           \n\
-          |         |         |         |     |                           \n\
-          +---------+---------+---------+     +-- vertical_resolution = 4 \n\
-          |         |         |         |     |                           \n\
-          |         |         |         |  <--+                           \n\
-          |         |         |         |     |                           \n\
-          +---------+---------+---------+     |                           \n\
-          |         |         |         |     |                           \n\
-          |         |         |         |  <--+                           \n\
-          |         |         |         |                                 \n\
-          +---------+---------+---------X                                 \n\
-                                       long2, lat2                        \n\
-               ^         ^         ^                                      \n\
-               |---------|---------|---- horizontal_resolution = 3        \n\
-      </pre>',
+    notes: 'The rectangle will be separated into a grid. For each grid cell, you will receive one post.' +
+            'The default grid size is 3*4 (as seen in the graphic below)' +
+      '<pre>' +
+      'long1, lat1                                                         \n' +
+      '    X---------+---------+---------+                                 \n' +
+      '    |         |         |         |                                 \n' +
+      '    |         |         |         |  <--+                           \n' +
+      '    |         |         |         |     |                           \n' +
+      '    +---------+---------+---------+     |                           \n' +
+      '    |         |         |         |     |                           \n' +
+      '    |         |         |         |  <--+                           \n' +
+      '    |         |         |         |     |                           \n' +
+      '    +---------+---------+---------+     +-- vertical_resolution = 4 \n' +
+      '    |         |         |         |     |                           \n' +
+      '    |         |         |         |  <--+                           \n' +
+      '    |         |         |         |     |                           \n' +
+      '    +---------+---------+---------+     |                           \n' +
+      '    |         |         |         |     |                           \n' +
+      '    |         |         |         |  <--+                           \n' +
+      '    |         |         |         |                                 \n' +
+      '    +---------+---------+---------X                                 \n' +
+      '                                 long2, lat2                        \n' +
+      '         ^         ^         ^                                      \n' +
+      '         |---------|---------|---- horizontal_resolution = 3        \n' +
+      '</pre>',
     summary: 'Fetch a list of posts by rectangle',
     method: 'GET',
     type: 'array',
