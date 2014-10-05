@@ -58,6 +58,6 @@ swagger.addGet(posts.getPost);
 swagger.addPost(posts.createPost);
 swagger.addDelete(posts.deletePost);
 
-swagger.configure(process.env.DOMAIN_API || 'http://localhost:5000', '0.4.4');
+swagger.configure(process.env.DOMAIN_API || 'http://localhost:5000', '0.5.0');
 
 module.exports = app;
