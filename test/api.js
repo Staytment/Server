@@ -373,7 +373,7 @@ describe('API', function () {
             done(err);
           }
           var posts = res.body.features;
-          expect(posts.length).to.be.lessThan(16);
+          expect(posts.length).to.be.lessThan(31);
           done();
         });
       });
